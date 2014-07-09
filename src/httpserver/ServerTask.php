@@ -8,6 +8,7 @@ class ServerTask extends \Thread {
         $this->vars = serialize([]);
         $this->post = serialize([]);
         $this->path = $path;
+        $this->h = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n";
         $this->sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
         if(socket_bind($this->sock, "0.0.0.0", 8080) === false) $this->stop();
         if(socket_listen($this->sock, 5) === false) $this->stop();
@@ -28,11 +29,11 @@ class ServerTask extends \Thread {
                    $page = parse_url("http://e.co" . $page, PHP_URL_PATH); //Parse url won't work on relative URLs
                    $page = str_replace("/.", "", str_replace("/..", "", $page));
                    if($page == "/") $page = "/index.html";
-                   if(!is_file($this->path . $page)) socket_write($con, "File not found.");
-                   elseif (substr($page, -4) == "html") socket_write($con, $this->replace(file_get_contents($this->path . $page)));
-                   else socket_write($con, file_get_contents($this->path . $page));
+                   if(!is_file($this->path . $page)) socket_write($con, $this->h . "File not found.");
+                   elseif (substr($page, -4) == "html") socket_write($con, $this->h . $this->replace(file_get_contents($this->path . $page)));
+                   else socket_write($con, $this->h . file_get_contents($this->path . $page));
+                   socket_close($con);
                }
-               socket_close($con);
            }
         }
         socket_close($this->sock);
@@ -57,6 +58,7 @@ class ServerTask extends \Thread {
         $page = str_replace("/.", "", str_replace("/..", "", $page));
         $c[$page][] = $p;
         $this->post = serialize($c);
+        socket_close($con);
     }
 }
 

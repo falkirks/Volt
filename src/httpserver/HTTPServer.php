@@ -12,7 +12,7 @@ class HTTPServer extends PluginBase{
         if ($this->server->stop === false){
             $this->getLogger()->info("[SUCCESS] HTTP Server Status: " . TextFormat::GREEN . "Active\n");
             $this->task = new PostCollectionTask($this);
-            $this->getServer()->getScheduler()->scheduleRepeatingTask($this->task, 10);
+            $this->getServer()->getScheduler()->scheduleRepeatingTask($this->task, 5);
         }
         else $this->getLogger()->warning("HTTP Server Status: " . TextFormat::RED . "Failed\n");
 
