@@ -1,6 +1,7 @@
 <?php
 namespace httpserver;
-class ServerTask extends \Thread {
+use pocketmine\Thread;
+class ServerTask extends Thread {
     private $sock;
     public $vars, $stop, $path, $post;
     public function __construct($path) {
