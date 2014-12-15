@@ -13,7 +13,6 @@ class ServerTask extends Thread {
         $this->stop = false;
         $this->pool = new \Pool(4, \Worker::CLASS);
         $this->vars = serialize([]);
-        $this->post = serialize([]);
         $this->logger = $logger;
         $this->path = $path;
         $this->config = HTTPServer::$serverConfig;
@@ -42,6 +41,7 @@ class ServerTask extends Thread {
     }
     public function run() {
         $this->loader->register(true);
+
         /*while ($this->stop === false) {
            if(($con = socket_accept($this->sock)) !== false){
                $page = trim(socket_read($con, 2048, PHP_NORMAL_READ));
@@ -92,20 +92,6 @@ class ServerTask extends Thread {
         $v = unserialize($this->vars);
         foreach ($items as $i) if(isset($v[$i])) $data = str_replace("{{" . $i . "}}", $v[$i], $data);
         return $data;
-    }
-    public function processDataPost($page, $con){
-        $p = "";
-        while(($r = @socket_read($con, 2048, PHP_BINARY_READ)) !== "" && $r !== false) $p .= $r;
-        if(!is_file($this->path . "/post.html")) socket_write($con, "Data posted.");
-        else socket_write($con, $this->replace(file_get_contents($this->path . "/post.html")));
-        $c = unserialize($this->post);
-        $page = substr($page,strpos($page, " ")+1);
-        $page = substr($page, 0,strpos($page, " "));
-        $page = parse_url("http://e.co" . $page, PHP_URL_PATH); //Parse url won't work on relative URLs
-        $page = str_replace("/.", "", str_replace("/..", "", $page));
-        $c[$page][] = $p;
-        $this->post = serialize($c);
-        socket_close($con);
     }
 }
 

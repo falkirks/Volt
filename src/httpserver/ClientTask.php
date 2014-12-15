@@ -1,7 +1,7 @@
 <?php
 namespace httpserver;
 
-use pocketmine\scheduler\AsyncTask;
+use Handlebars\Handlebars;
 
 class ClientTask extends \Threaded{
     private $clientSocket;
@@ -19,6 +19,7 @@ class ClientTask extends \Threaded{
     }
     public function run(){
         $this->loader->register(true);
+        $engine = new Handlebars;
         $buf = '';
         $headers = [];
         while ($message = socket_read($this->clientSocket, 2048, PHP_NORMAL_READ)) {
@@ -41,10 +42,21 @@ class ClientTask extends \Threaded{
         $verb = key($headers);
         switch(strtoupper($verb)){
             case 'GET':
-                $msg .= $this->getFile($path);
+                //$msg .= $this->getFile($path);
+                $msg .= $engine->render(
+                    'Planets:<br />{{#each planets}}<h6>{{this}}</h6>{{/each}}',
+                    array(
+                        'planets' => array(
+                            "Mercury",
+                            "Venus",
+                            "Earth",
+                            "Mars"
+                        )
+                    )
+                );
                 break;
             case 'POST':
-                
+
                 break;
         }
         socket_write($this->clientSocket, $msg);

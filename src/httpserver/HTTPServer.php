@@ -15,10 +15,10 @@ class HTTPServer extends PluginBase{
         if(!is_dir($this->getServer()->getDataPath() . "HTTPServer")) mkdir($this->getServer()->getDataPath() . "HTTPServer");
         $this->bound = [];
         $this->server = new ServerTask($this->getServer()->getDataPath() . "HTTPServer", $this->getServer()->getLoader(), $this->getServer()->getLogger());
-        if ($this->server->stop === false){
+        /*if ($this->server->stop === false){
             $this->task = new PostCollectionTask($this);
             $this->getServer()->getScheduler()->scheduleRepeatingTask($this->task, 5);
-        }
+        }*/
     }
     public function addValue($n, $v){
         /*if($this->server instanceof ServerTask){
@@ -39,6 +39,10 @@ class HTTPServer extends PluginBase{
         }
         return false;*/
         $this->getLogger()->warning(TextFormat::DARK_AQUA . 'bindTo($n, Callable $func)' . TextFormat::RESET . TextFormat::YELLOW . " is no longer supported.");
+    }
+    public function makeMeASandwich(PluginBase $plugin){
+        $this->getLogger()->info(TextFormat::DARK_AQUA . $plugin->getName() . TextFormat::WHITE . " asked for a sandwich.");
+        return new MonitoredWebsiteData($plugin->getName());
     }
     public function unbindServer(){
         $this->server->synchronized(function($thread){
