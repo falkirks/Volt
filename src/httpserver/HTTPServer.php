@@ -11,7 +11,7 @@ class HTTPServer extends PluginBase{
     public function onEnable(){
         $this->saveDefaultConfig();
         self::$serverConfig = $this->getConfig();
-        $this->getLogger()->warning("HTTPServer 3.0 preview is mystical, magical and buggy.");
+        $this->getLogger()->warning("HTTPServer 3.0 preview is mystical, magical and " . TextFormat::RED . "buggy" . TextFormat::YELLOW . ".");
         if(!is_dir($this->getServer()->getDataPath() . "HTTPServer")) mkdir($this->getServer()->getDataPath() . "HTTPServer");
         $this->bound = [];
         $this->server = new ServerTask($this->getServer()->getDataPath() . "HTTPServer", $this->getServer()->getLoader(), $this->getServer()->getLogger());
@@ -41,7 +41,7 @@ class HTTPServer extends PluginBase{
         $this->getLogger()->warning(TextFormat::DARK_AQUA . 'bindTo($n, Callable $func)' . TextFormat::RESET . TextFormat::YELLOW . " is no longer supported.");
     }
     public function makeMeASandwich(PluginBase $plugin){
-        $this->getLogger()->info(TextFormat::DARK_AQUA . $plugin->getName() . TextFormat::WHITE . " asked for a sandwich.");
+        $this->getLogger()->info("* gives " . TextFormat::DARK_AQUA . $plugin->getName() . TextFormat::WHITE . " a sandwich.");
         return new MonitoredWebsiteData($plugin->getName());
     }
     public function unbindServer(){
