@@ -1,0 +1,20 @@
+#  ██╗  ██╗████████╗████████╗██████╗ ███████╗███████╗██████╗ ██╗   ██╗███████╗██████╗
+#  ██║  ██║╚══██╔══╝╚══██╔══╝██╔══██╗██╔════╝██╔════╝██╔══██╗██║   ██║██╔════╝██╔══██╗
+#  ███████║   ██║      ██║   ██████╔╝███████╗█████╗  ██████╔╝██║   ██║█████╗  ██████╔╝
+#  ██╔══██║   ██║      ██║   ██╔═══╝ ╚════██║██╔══╝  ██╔══██╗╚██╗ ██╔╝██╔══╝  ██╔══██╗
+#  ██║  ██║   ██║      ██║   ██║     ███████║███████╗██║  ██║ ╚████╔╝ ███████╗██║  ██║
+#  ╚═╝  ╚═╝   ╚═╝      ╚═╝   ╚═╝     ╚══════╝╚══════╝╚═╝  ╚═╝  ╚═══╝  ╚══════╝╚═╝  ╚═╝
+#
+server-port: 7000
+  # The port you want you server to run on
+allowed-script-types: []
+  # Use this to list the file extensions you would like to be
+  # attached to which languages. They should be defined like
+  # "php": ["php", "phpx"]
+  # Not all languages are supported
+pool-size: 4
+  # Size to use for the client handler pool
+  # (If you don't understand this, you don't need to change it)
+special-pages:
+  index: "/index.html"
+  404: "/404.html"

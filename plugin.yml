@@ -1,6 +1,6 @@
 name: HTTPServer
 main: httpserver\HTTPServer
-version: 2.2.0
-author: Falk
-api: [1.2.0]
+version: 3.0
+author: Falkirks
+api: [1.7.0]
 load: POSTWORLD

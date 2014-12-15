@@ -1,26 +1,48 @@
 <?php
 namespace httpserver;
 use pocketmine\Thread;
+use pocketmine\utils\TextFormat;
+
 class ServerTask extends Thread {
     private $sock;
+    private $pool;
+    private $logger;
+    private $config;
     public $vars, $stop, $path, $post;
-    public function __construct($path) {
+    public function __construct($path, \ClassLoader $loader, \Logger $logger) {
         $this->stop = false;
+        $this->pool = new \Pool(4, \Worker::CLASS);
         $this->vars = serialize([]);
         $this->post = serialize([]);
+        $this->logger = $logger;
         $this->path = $path;
-        $this->h = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n";
-        $this->sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
-        if(socket_bind($this->sock, "0.0.0.0", 8080) === false) $this->stop();
-        if(socket_listen($this->sock, 5) === false) $this->stop();
-        if(socket_set_nonblock($this->sock) === false) $this->stop();
+        $this->config = HTTPServer::$serverConfig;
+        $this->loader = clone $loader;
+        if (($this->sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP)) === false) {
+            print "socket_create() failed: reason: " . socket_strerror(socket_last_error()) . "\n";
+            $this->stop();
+        }
+        if(socket_set_option ($this->sock, SOL_SOCKET, SO_REUSEADDR, 1) === false){
+            $this->stop();
+        }
+        if (socket_bind($this->sock, "0.0.0.0", $this->config->get("server-port")) === false) {
+            print "socket_bind() failed: reason: " . socket_strerror(socket_last_error($this->sock)) . "\n";
+            $this->stop();
+        }
+        if (socket_listen($this->sock, 5) === false) {
+            print "socket_listen() failed: reason: " . socket_strerror(socket_last_error($this->sock)) . "\n";
+            $this->stop();
+        }
+        $this->getLogger()->info("[SUCCESS] HTTP Server Status: " . TextFormat::GREEN . "Active" . TextFormat::WHITE . " on port " . HTTPServer::$serverConfig->get("server-port") . "\n");
         $this->start();
     }
     public function stop() {
+        $this->getLogger()->warning("HTTP Server Status: " . TextFormat::RED . "Stopped\n");
         $this->stop = true;
     }
     public function run() {
-        while ($this->stop === false) {
+        $this->loader->register(true);
+        /*while ($this->stop === false) {
            if(($con = socket_accept($this->sock)) !== false){
                $page = trim(socket_read($con, 2048, PHP_NORMAL_READ));
                if(substr($page,0,4) == "POST") $this->processDataPost($page, $con);
@@ -36,10 +58,34 @@ class ServerTask extends Thread {
                    socket_close($con);
                }
            }
+        }*/
+        while($this->stop === false) {
+            if (($msgsock = socket_accept($this->sock)) === false) {
+                break;
+            }
+            $this->pool->submit(new ClientTask($msgsock, $this->loader, $this->getLogger(), $this->path, $this->config));
         }
+        $this->pool->collect(function(ClientTask $client){
+            $client->close();
+            return true;
+        });
+        socket_shutdown($this->sock);
+        $arrOpt = array('l_onoff' => 1, 'l_linger' => 1);
+        socket_set_block($this->sock);
+        socket_set_option($this->sock, SOL_SOCKET, SO_LINGER, $arrOpt);
         socket_close($this->sock);
+
+        $this->pool->shutdown();
         exit(0);
     }
+
+    /**
+     * @return \Logger
+     */
+    public function getLogger(){
+        return $this->logger;
+    }
+
     public function replace($data){
         preg_match_all('/{{(.*?)}}/', $data, $items);
         $items = $items[1];
