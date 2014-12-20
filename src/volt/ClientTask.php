@@ -2,7 +2,6 @@
 namespace volt;
 
 use Handlebars\Handlebars;
-use pocketmine\event\server\ServerEvent;
 
 class ClientTask extends \Threaded{
     private $clientSocket;
