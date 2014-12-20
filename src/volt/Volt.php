@@ -1,20 +1,20 @@
 <?php
-namespace httpserver;
+namespace volt;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat;
 
-class HTTPServer extends PluginBase{
+class Volt extends PluginBase{
     public $server, $bound, $task;
     /** @var  Config */
     public static $serverConfig;
     public function onEnable(){
         $this->saveDefaultConfig();
         self::$serverConfig = $this->getConfig();
-        $this->getLogger()->warning("HTTPServer 3.0 preview is mystical, magical and " . TextFormat::RED . "buggy" . TextFormat::YELLOW . ".");
-        if(!is_dir($this->getServer()->getDataPath() . "HTTPServer")) mkdir($this->getServer()->getDataPath() . "HTTPServer");
+        $this->getLogger()->warning("volt 3.0 preview is mystical, magical and " . TextFormat::RED . "buggy" . TextFormat::YELLOW . ".");
+        if(!is_dir($this->getServer()->getDataPath() . "volt")) mkdir($this->getServer()->getDataPath() . "volt");
         $this->bound = [];
-        $this->server = new ServerTask($this->getServer()->getDataPath() . "HTTPServer", $this->getServer()->getLoader(), $this->getServer()->getLogger());
+        $this->server = new ServerTask($this->getServer()->getDataPath() . "volt", $this->getServer()->getLoader(), $this->getServer()->getLogger());
         /*if ($this->server->stop === false){
             $this->task = new PostCollectionTask($this);
             $this->getServer()->getScheduler()->scheduleRepeatingTask($this->task, 5);

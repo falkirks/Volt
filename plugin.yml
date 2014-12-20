@@ -1,5 +1,5 @@
-name: HTTPServer
-main: httpserver\HTTPServer
+name: Volt
+main: volt\Volt
 version: 3.0
 author: Falkirks
 api: [1.7.0]

@@ -1,5 +1,5 @@
 <?php
-namespace httpserver;
+namespace volt;
 
 use Handlebars\Handlebars;
 

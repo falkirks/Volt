@@ -1,5 +1,5 @@
 <?php
-namespace httpserver;
+namespace volt;
 
 class WebsiteData implements \ArrayAccess{
     public function __construct(array $page = []){

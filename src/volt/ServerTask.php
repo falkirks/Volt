@@ -1,5 +1,5 @@
 <?php
-namespace httpserver;
+namespace volt;
 use pocketmine\Thread;
 use pocketmine\utils\TextFormat;
 
@@ -15,7 +15,7 @@ class ServerTask extends Thread {
         $this->vars = serialize([]);
         $this->logger = $logger;
         $this->path = $path;
-        $this->config = HTTPServer::$serverConfig;
+        $this->config = Volt::$serverConfig;
         $this->loader = clone $loader;
         if (($this->sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP)) === false) {
             print "socket_create() failed: reason: " . socket_strerror(socket_last_error()) . "\n";
@@ -32,7 +32,7 @@ class ServerTask extends Thread {
             print "socket_listen() failed: reason: " . socket_strerror(socket_last_error($this->sock)) . "\n";
             $this->stop();
         }
-        $this->getLogger()->info("[SUCCESS] HTTP Server Status: " . TextFormat::GREEN . "Active" . TextFormat::WHITE . " on port " . HTTPServer::$serverConfig->get("server-port") . "\n");
+        $this->getLogger()->info("[SUCCESS] HTTP Server Status: " . TextFormat::GREEN . "Active" . TextFormat::WHITE . " on port " . volt::$serverConfig->get("server-port") . "\n");
         $this->start();
     }
     public function stop() {
