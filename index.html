@@ -1,0 +1,115 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Volt by Falkirks</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Volt</h1>
+        <p>A painless web server for PocketMine-MP</p>
+
+        <p class="view"><a href="https://github.com/Falkirks/Volt">View the Project on GitHub <small>Falkirks/Volt</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/Falkirks/Volt/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/Falkirks/Volt/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/Falkirks/Volt">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a id="-volt" class="anchor" href="#-volt" aria-hidden="true"><span class="octicon octicon-link"></span></a>
+<img src="/resources/smallicon.png" alt="Volt Icon"> <strong><em>Volt</em></strong>
+</h1>
+
+<h6>
+<a id="formerly-httpserver" class="anchor" href="#formerly-httpserver" aria-hidden="true"><span class="octicon octicon-link"></span></a>Formerly HTTPServer</h6>
+
+<p>Volt is an hyper-powerful integrated website solution for PocketMine. Driven by Handlebars and pthreads, volt is an extensive webserver.</p>
+
+<h3>
+<a id="whats-changing-in-v300" class="anchor" href="#whats-changing-in-v300" aria-hidden="true"><span class="octicon octicon-link"></span></a>What's changing in v3.0.0?</h3>
+
+<ul>
+<li>
+<strong>Name.</strong> HTTPServer is now volt. Why? I thought carefully about this one and I figured that "HTTPServer" did not represent the project correctly.</li>
+<li>
+<strong>Threading.</strong> Volt is now better at threading. Every request is run by a worker in a pool. This allows multiple requests to be processed in parallel. </li>
+<li>
+<strong>Templating.</strong> Now Volt is driven by Handlebars for high speeds and extreme customization.</li>
+<li>
+<strong>API.</strong> The API has been entirely rewritten to be more fun to use. It is much more logical and powerful.</li>
+</ul>
+
+<h3>
+<a id="volt-api" class="anchor" href="#volt-api" aria-hidden="true"><span class="octicon octicon-link"></span></a>Volt API</h3>
+
+<p>The API is still tentative and might undergo some large structural changes before its release, so don't get too attached to it. The API centralizes on <code>WebsiteData</code> objects which are magical objects that allow interaction with the server. These objects mimic arrays by implementing <code>\ArrayAccess</code>, <code>\Countable</code>, and <code>\IteratorAggregate</code>.</p>
+
+<h4>
+<a id="getting-api-access" class="anchor" href="#getting-api-access" aria-hidden="true"><span class="octicon octicon-link"></span></a>Getting API access</h4>
+
+<h5>
+<a id="anonymous" class="anchor" href="#anonymous" aria-hidden="true"><span class="octicon octicon-link"></span></a>Anonymous</h5>
+
+<p>This mode of access is <strong>not</strong> recommended . It allows direct access to the API without any logging or monitoring.</p>
+
+<div class="highlight highlight-php"><pre><span class="pl-s2"><span class="pl-vo">$data</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-s3">\volt\api\</span><span class="pl-s3">WebsiteData</span>();</span></pre></div>
+
+<h5>
+<a id="identified" class="anchor" href="#identified" aria-hidden="true"><span class="octicon octicon-link"></span></a>Identified</h5>
+
+<p>In an optimal setting you should identify yourself to Volt. This will allow Volt to create logs of your API usage. There are three options for identification</p>
+
+<ul>
+<li>PluginBase (Recommended)</li>
+<li>Plugin name</li>
+<li>Auto-detect (Not recommended)</li>
+</ul>
+
+<div class="highlight highlight-php"><pre><span class="pl-s2"><span class="pl-c">/* Option #1 (Recommended) */</span></span>
+<span class="pl-s2"><span class="pl-vo">$data</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-s3">\volt\api\</span><span class="pl-s3">MonitoredWebsiteData</span>(<span class="pl-vo">$this</span>); <span class="pl-c">//Called from within a PluginBase</span></span>
+<span class="pl-s2"><span class="pl-c">/* Option #2 */</span></span>
+<span class="pl-s2"><span class="pl-vo">$data</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-s3">\volt\api\</span><span class="pl-s3">MonitoredWebsiteData</span>(<span class="pl-s1"><span class="pl-pds">"</span>PluginName<span class="pl-pds">"</span></span>); <span class="pl-c">//Called from anywhere</span></span>
+<span class="pl-s2"><span class="pl-c">/* Option #3 (Not recommended) */</span></span>
+<span class="pl-s2"><span class="pl-vo">$data</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-s3">\volt\api\</span><span class="pl-s3">MonitoredWebsiteData</span>(); <span class="pl-c">//Called from within a PluginBase, and requires class name to equal plugin name</span></span></pre></div>
+
+<p>If an identification request fails a <code>volt\exception\PluginIdentificationException</code> will be thrown.</p>
+
+<h4>
+<a id="setting-and-getting-values" class="anchor" href="#setting-and-getting-values" aria-hidden="true"><span class="octicon octicon-link"></span></a>Setting and getting values</h4>
+
+<p>Once you have a <code>WebsiteData</code> object, you get a link to the global scope of handlebars variables. It is highly recommended to put all your variables in a namespace for your plugin, this helps avoid collisions.</p>
+
+<div class="highlight highlight-php"><pre><span class="pl-s2"><span class="pl-vo">$data</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-s3">\volt\</span><span class="pl-s3">WebsiteData</span>(); <span class="pl-c">//We are using anon</span></span>
+<span class="pl-s2"><span class="pl-vo">$data</span>[<span class="pl-s1"><span class="pl-pds">"</span>foo<span class="pl-pds">"</span></span>] <span class="pl-k">=</span> [<span class="pl-s1"><span class="pl-pds">"</span>1<span class="pl-pds">"</span></span>, <span class="pl-s1"><span class="pl-pds">"</span>2<span class="pl-pds">"</span></span>, <span class="pl-s1"><span class="pl-pds">"</span>3<span class="pl-pds">"</span></span>];</span>
+<span class="pl-s2"><span class="pl-s3">var_dump</span>(<span class="pl-vo">$data</span>[<span class="pl-s1"><span class="pl-pds">"</span>foo<span class="pl-pds">"</span></span>]); <span class="pl-c">//["1", "2", "3"]</span></span></pre></div>
+
+<h4>
+<a id="dynamic-page-registration" class="anchor" href="#dynamic-page-registration" aria-hidden="true"><span class="octicon octicon-link"></span></a>Dynamic Page Registration</h4>
+
+<p>To ease plugin installation, pages can be dynamically registered into Volt. This feature is still experimental and may be expanded upon in a future release.</p>
+
+<div class="highlight highlight-php"><pre><span class="pl-s2"><span class="pl-vo">$page</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-s3">\volt\api\</span><span class="pl-s3">DynamicPage</span>(<span class="pl-s1"><span class="pl-pds">"</span>/hello<span class="pl-pds">"</span></span>);</span>
+<span class="pl-s2">$<span class="pl-vo">page</span>(<span class="pl-s1"><span class="pl-pds">"</span>This is the content<span class="pl-pds">"</span></span>); <span class="pl-c">//Page is now available at /hello and will display "This is the content"</span></span></pre></div>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/Falkirks">Falkirks</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
