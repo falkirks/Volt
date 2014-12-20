@@ -34,11 +34,11 @@ class ServerTask extends Thread{
             print "socket_listen() failed: reason: " . socket_strerror(socket_last_error($this->sock)) . "\n";
             $this->stop();
         }
-        $this->getLogger()->info("[SUCCESS] HTTP Server Status: " . TextFormat::GREEN . "Active" . TextFormat::WHITE . " on port " . volt::$serverConfig->get("server-port") . "\n");
+        $this->getLogger()->info("[SUCCESS] Server Status: " . TextFormat::GREEN . "Active" . TextFormat::WHITE . " on port " . volt::$serverConfig->get("server-port") . "\n");
         $this->start();
     }
     public function stop() {
-        $this->getLogger()->warning("HTTP Server Status: " . TextFormat::RED . "Stopped\n");
+        $this->getLogger()->info("Server Status: " . TextFormat::RED . "Stopped\n");
         $this->stop = true;
     }
     public function run() {
@@ -112,4 +112,3 @@ class ServerTask extends Thread{
         return $this->logger;
     }
 }
-
