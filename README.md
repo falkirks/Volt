@@ -1,4 +1,4 @@
-![Volt Icon](/resources/smallicon.png) Volt
+![Volt Icon](/resources/smallicon.png) ***Volt***
 ====
 ###### Formerly HTTPServer
 
