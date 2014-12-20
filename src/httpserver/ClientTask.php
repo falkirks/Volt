@@ -59,7 +59,7 @@ class ClientTask extends \Threaded{
         return str_replace("/.", "", str_replace("/..", "", $path));
     }
     public function getFile($path){
-        if($path === "/") return $this->getFile($this->getConfig()->get("special-pages")["index"]);
+        if(substr($path, strlen($path)-1, 1) === "/") return $this->getFile($path . $this->getConfig()->get("special-pages")["index"]);
         elseif(!is_file($this->basePath . $path)){
             if(is_file($this->basePath . $this->getConfig()->get("special-pages")["404"])){
                 return $this->getFile($this->getConfig()->get("special-pages")["404"]);
