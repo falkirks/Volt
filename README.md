@@ -5,10 +5,10 @@ Volt
 Volt is an hyper-powerful integrated website solution for PocketMine. Driven by Handlebars and pthreads, volt is an extensive webserver.
 
 ### What's changing in v3.0.0?
-* **The name** HTTPServer is now volt. Why? I thought carefully about this one and I figured that "HTTPServer" did not represent the project correctly.
+* **Name.** HTTPServer is now volt. Why? I thought carefully about this one and I figured that "HTTPServer" did not represent the project correctly.
 * **Threading.** Volt is now better at threading. Every request is run by a worker in a pool. This allows multiple requests to be processed in parallel. 
-* **Templating** Now Volt is driven by Handlebars for high speeds and extreme customization.
-* **New API** The API has been entirely rewritten to be more fun to use. It is much more logical and powerful.
+* **Templating.** Now Volt is driven by Handlebars for high speeds and extreme customization.
+* **API.** The API has been entirely rewritten to be more fun to use. It is much more logical and powerful.
 
 ### Volt API
 The API is still tentative and might undergo some large structural changes before its release, so don't get too attached to it. The API centralizes on WebsiteData objects which are magical objects which allow interaction with the server.
