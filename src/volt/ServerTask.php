@@ -8,12 +8,13 @@ class ServerTask extends Thread {
     private $pool;
     private $logger;
     private $config;
+    /** @var ScopedValueStore  */
     private $valueStore;
     public $stop, $path;
     public function __construct($path, \ClassLoader $loader, \Logger $logger) {
         $this->stop = false;
         $this->pool = new \Pool(4, \Worker::CLASS);
-        $this->valueStore = new \ScopedValueStore();
+        $this->valueStore = new ScopedValueStore();
         $this->logger = $logger;
         $this->path = $path;
         $this->config = Volt::$serverConfig;
@@ -64,7 +65,7 @@ class ServerTask extends Thread {
             if (($msgsock = socket_accept($this->sock)) === false) {
                 break;
             }
-            $this->pool->submit(new ClientTask($msgsock, $this->loader, $this->getLogger(), $this->path, $this->config));
+            $this->pool->submit(new ClientTask($msgsock, $this->loader, $this->getLogger(), $this->path, $this->config, $this->valueStore));
         }
         $this->pool->collect(function(ClientTask $client){
             $client->close();

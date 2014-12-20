@@ -1,4 +1,5 @@
 <?php
+namespace volt;
 
 class ScopedValueStore{
     private $valueStore;

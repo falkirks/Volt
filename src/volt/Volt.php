@@ -12,7 +12,7 @@ class Volt extends PluginBase{
     public function onEnable(){
         $this->saveDefaultConfig();
         self::$serverConfig = $this->getConfig();
-        $this->getLogger()->warning("volt 3.0 preview is mystical, magical and " . TextFormat::RED . "buggy" . TextFormat::YELLOW . ".");
+        $this->getLogger()->warning("Volt 3.0 preview is mystical, magical and " . TextFormat::RED . "buggy" . TextFormat::YELLOW . ".");
         if(!is_dir($this->getServer()->getDataPath() . "volt")) mkdir($this->getServer()->getDataPath() . "volt");
         $this->server = new ServerTask($this->getServer()->getDataPath() . "volt", $this->getServer()->getLoader(), $this->getServer()->getLogger());
         /*if ($this->server->stop === false){
@@ -48,7 +48,7 @@ class Volt extends PluginBase{
         return $this->server;
     }
     public function unbindServer(){
-        $this->server->synchronized(function($thread){
+        $this->server->synchronized(function(ServerTask $thread){
             $thread->stop();
         }, $this->server);
     }
