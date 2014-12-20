@@ -1,4 +1,4 @@
-HTTPServer
+Volt (formerly HTTPServer)
 ==========
 
-HTTPServer is an hyper-powerful integrated website solution for PocketMine. Driven by Handlebars and pthreads, HTTPServer is an extensive webserver. 
+Volt is an hyper-powerful integrated website solution for PocketMine. Driven by Handlebars and pthreads, volt is an extensive webserver. 
