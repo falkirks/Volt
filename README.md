@@ -17,19 +17,19 @@ The API is still tentative and might undergo some large structural changes befor
 ##### Anonymous
 This mode of access is **not** recommended . It allows direct access to the API without any logging or monitoring.
 ```php
-	$data = new \volt\WebsiteData();
+$data = new \volt\WebsiteData();
 ```
 ##### Identified 
 In an optimal setting you should identify yourself to Volt. This will allow Volt to create logs of your API usage. In order to identify yourself, you will need to pass a PluginBase object to Volt. You can construct a MonitoredWebsiteData directly, but this might not be supported in future versions.
 ```php
-	$data = Volt::makeMeASandwich($this); //returns MonitoredWebsiteData
+$data = Volt::makeMeASandwich($this); //returns MonitoredWebsiteData
 ```
 #### Setting and getting values
 Once you have a WebsiteData object, you get a link to the global scope of handlebars variables.
 ```php
-	$data = new \volt\WebsiteData(); //We are using anon
-    $data["foo"] = ["1", "2", "3"];
-    var_dump($data["foo"]); //["1", "2", "3"]
+$data = new \volt\WebsiteData(); //We are using anon
+$data["foo"] = ["1", "2", "3"];
+var_dump($data["foo"]); //["1", "2", "3"]
 ```
 
 #### Changing the scope
@@ -38,12 +38,12 @@ Obviously some variables should only be available to /foo/* and some other shoul
 **Note** Variables in higher scopes won't be available to lower scope. So if I am in $data->1->2, I won't be able to see $data->1 variables.
 
 ```php
-	$data = new \volt\WebsiteData(); //We are using anon
-    $foo = $data->foo; //Switch scope to /foo/*
-    $data["thestuff"] = "You are a /foo/* but not a /foo/bar/*";
-    $foobar = $foo->bar; //Switch scope to /foo/bar/*
-    var_dump($foobar["thestuff"]); //null
-    $data["thestuff"] = "You are a /foo/bar/*";
+$data = new \volt\WebsiteData(); //We are using anon
+$foo = $data->foo; //Switch scope to /foo/*
+$data["thestuff"] = "You are a /foo/* but not a /foo/bar/*";
+$foobar = $foo->bar; //Switch scope to /foo/bar/*
+var_dump($foobar["thestuff"]); //null
+$data["thestuff"] = "You are a /foo/bar/*";
 ```
 
 #### Dynamic Page Registration
