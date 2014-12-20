@@ -2,13 +2,14 @@
 namespace volt\api;
 
 use pocketmine\Server;
+use Traversable;
 use volt\exception\PluginNotEnabledException;
 use volt\ServerTask;
 use volt\Volt;
 
-class WebsiteData implements \ArrayAccess{
+class WebsiteData implements \ArrayAccess, \Countable, \IteratorAggregate{
     public function __construct(){
-
+        $this->k = 0;
     }
 
     public function offsetExists($offset){
@@ -49,6 +50,31 @@ class WebsiteData implements \ArrayAccess{
         }
     }
     
+    public function getIterator(){
+        $volt = $this->getVolt();
+        if($volt !== null) {
+            return $volt->getVoltServer()->synchronized(function (ServerTask $thread) {
+                return $thread->getValues();
+            }, $volt->getVoltServer());
+        }
+        else{
+            throw new PluginNotEnabledException;
+        }
+    }
+
+    public function count(){
+        $volt = $this->getVolt();
+        if($volt !== null) {
+            return $volt->getVoltServer()->synchronized(function (ServerTask $thread) {
+                return count($thread->getValues());
+            }, $volt->getVoltServer());
+        }
+        else{
+            throw new PluginNotEnabledException;
+        }
+    }
+
+
     public function offsetUnset($offset){
         $this->offsetSet($offset, null);
     }

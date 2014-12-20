@@ -43,24 +43,6 @@ class ServerTask extends Thread{
     }
     public function run() {
         $this->loader->register(true);
-
-        /*while ($this->stop === false) {
-           if(($con = socket_accept($this->sock)) !== false){
-               $page = trim(socket_read($con, 2048, PHP_NORMAL_READ));
-               if(substr($page,0,4) == "POST") $this->processDataPost($page, $con);
-               else{
-                   $page = substr($page,strpos($page, " ")+1);
-                   $page = substr($page, 0,strpos($page, " "));
-                   $page = parse_url("http://e.co" . $page, PHP_URL_PATH); //Parse url won't work on relative URLs
-                   $page = str_replace("/.", "", str_replace("/..", "", $page));
-                   if($page == "/") $page = "/index.html";
-                   if(!is_file($this->path . $page)) socket_write($con, $this->h . "File not found.");
-                   elseif (substr($page, -4) == "html") socket_write($con, $this->h . $this->replace(file_get_contents($this->path . $page)));
-                   else socket_write($con, $this->h . file_get_contents($this->path . $page));
-                   socket_close($con);
-               }
-           }
-        }*/
         while($this->stop === false) {
             if (($msgsock = socket_accept($this->sock)) === false) {
                 break;
