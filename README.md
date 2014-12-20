@@ -17,34 +17,35 @@ The API is still tentative and might undergo some large structural changes befor
 ##### Anonymous
 This mode of access is **not** recommended . It allows direct access to the API without any logging or monitoring.
 ```php
-$data = new \volt\WebsiteData();
+$data = new \volt\api\WebsiteData();
 ```
 ##### Identified 
-In an optimal setting you should identify yourself to Volt. This will allow Volt to create logs of your API usage. In order to identify yourself, you will need to pass a `PluginBase` object to Volt. You can construct a `MonitoredWebsiteData` directly, but this might not be supported in future versions.
+In an optimal setting you should identify yourself to Volt. This will allow Volt to create logs of your API usage. There are three options for identification
+* PluginBase (Recommended)
+* Plugin name
+* Auto-detect (Not recommended)
+
 ```php
-$data = Volt::makeMeASandwich($this); //returns MonitoredWebsiteData
+/* Option #1 (Recommended) */
+$data = new volt\api\MonitoredWebsiteData($this); //Called from within a PluginBase
+/* Option #2 */
+$data = new volt\api\MonitoredWebsiteData("PluginName"); //Called from anywhere
+/* Option #3 (Not recommended) */
+$data = new volt\api\MonitoredWebsiteData(); //Called from within a PluginBase, and requires class name to equal plugin name
 ```
+If an identification request fails a `volt\exception\PluginIdentificationException` will be thrown.
+
 #### Setting and getting values
-Once you have a `WebsiteData` object, you get a link to the global scope of handlebars variables.
+Once you have a `WebsiteData` object, you get a link to the global scope of handlebars variables. It is highly recommended to put all your variables in a namespace for your plugin, this helps avoid collisions.
 ```php
 $data = new \volt\WebsiteData(); //We are using anon
 $data["foo"] = ["1", "2", "3"];
 var_dump($data["foo"]); //["1", "2", "3"]
 ```
 
-#### Changing the scope
-Obviously some variables should only be available to /foo/* and some other should only be accessible to /foo/bar/*
-
-**Note** Variables in higher scopes won't be available to lower scope. So if I am in `$data->1->2`, I won't be able to see `$data->1` variables.
-
-```php
-$data = new \volt\WebsiteData(); //We are using anon
-$foo = $data->foo; //Switch scope to /foo/*
-$data["thestuff"] = "You are a /foo/* but not a /foo/bar/*";
-$foobar = $foo->bar; //Switch scope to /foo/bar/*
-var_dump($foobar["thestuff"]); //null
-$data["thestuff"] = "You are a /foo/bar/*";
-```
-
 #### Dynamic Page Registration
-To ease plugin installation, pages can be dynamically registered into Volt. This feature is implemented in the backend but still needs to be added to the API.
+To ease plugin installation, pages can be dynamically registered into Volt. This feature is still experimental and may be expanded upon in a future release.
+```php
+$page = new DynamicPage("/hello");
+$page("This is the content"); //Page is now available at /hello and will display "This is the content"
+```
