@@ -11,7 +11,7 @@ Volt is an hyper-powerful integrated website solution for PocketMine. Driven by 
 * **API.** The API has been entirely rewritten to be more fun to use. It is much more logical and powerful.
 
 ### Volt API
-The API is still tentative and might undergo some large structural changes before its release, so don't get too attached to it. The API centralizes on WebsiteData objects which are magical objects which allow interaction with the server.
+The API is still tentative and might undergo some large structural changes before its release, so don't get too attached to it. The API centralizes on `WebsiteData` objects which are magical objects which allow interaction with the server.
 
 #### Getting API access
 ##### Anonymous
@@ -20,12 +20,12 @@ This mode of access is **not** recommended . It allows direct access to the API 
 $data = new \volt\WebsiteData();
 ```
 ##### Identified 
-In an optimal setting you should identify yourself to Volt. This will allow Volt to create logs of your API usage. In order to identify yourself, you will need to pass a PluginBase object to Volt. You can construct a MonitoredWebsiteData directly, but this might not be supported in future versions.
+In an optimal setting you should identify yourself to Volt. This will allow Volt to create logs of your API usage. In order to identify yourself, you will need to pass a `PluginBase` object to Volt. You can construct a `MonitoredWebsiteData` directly, but this might not be supported in future versions.
 ```php
 $data = Volt::makeMeASandwich($this); //returns MonitoredWebsiteData
 ```
 #### Setting and getting values
-Once you have a WebsiteData object, you get a link to the global scope of handlebars variables.
+Once you have a `WebsiteData` object, you get a link to the global scope of handlebars variables.
 ```php
 $data = new \volt\WebsiteData(); //We are using anon
 $data["foo"] = ["1", "2", "3"];
