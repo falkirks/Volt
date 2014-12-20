@@ -2,6 +2,7 @@
 namespace volt;
 
 use Handlebars\Handlebars;
+use pocketmine\event\server\ServerEvent;
 
 class ClientTask extends \Threaded{
     private $clientSocket;
@@ -10,16 +11,16 @@ class ClientTask extends \Threaded{
     private $logger;
     private $basePath;
     private $config;
-    /** @var ScopedValueStore  */
-    private $valueStore;
-    public function __construct($clientSocket, \ClassLoader $loader, \Logger $logger, $path, $config, $valueStore){
+    /** @var ServerTask  */
+    private $serverTask;
+    public function __construct($clientSocket, \ClassLoader $loader, \Logger $logger, $path, $config, ServerTask $serverTask){
         $this->clientSocket = $clientSocket;
         $this->h = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n";
         $this->loader = clone $loader;
         $this->logger = $logger;
         $this->basePath = $path;
         $this->config = $config;
-        $this->valueStore = $valueStore;
+        $this->serverTask = $serverTask;
     }
     public function run(){
         $this->loader->register(true);
@@ -51,7 +52,7 @@ class ClientTask extends \Threaded{
         switch(strtoupper($verb)){
             case 'GET':
                 //$msg .= $this->getFile($path);
-                $msg .= $engine->render($path, array_merge($this->valueStore->getScopeValues(explode("/", $this->basePath)), ["_request" => ["query" => $query, "path" => $path, "ip" => $ip]]));
+                $msg .= $engine->render($path, array_merge($this->serverTask->getValues(), ["_request" => ["query" => $query, "path" => $path, "ip" => $ip]]));
                 break;
             case 'POST':
 

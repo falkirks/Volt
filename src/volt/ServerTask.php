@@ -8,13 +8,12 @@ class ServerTask extends Thread {
     private $pool;
     private $logger;
     private $config;
-    /** @var ScopedValueStore  */
     private $valueStore;
     public $stop, $path;
     public function __construct($path, \ClassLoader $loader, \Logger $logger) {
         $this->stop = false;
         $this->pool = new \Pool(4, \Worker::CLASS);
-        $this->valueStore = new ScopedValueStore();
+        $this->valueStore = serialize([]);
         $this->logger = $logger;
         $this->path = $path;
         $this->config = Volt::$serverConfig;
@@ -65,7 +64,7 @@ class ServerTask extends Thread {
             if (($msgsock = socket_accept($this->sock)) === false) {
                 break;
             }
-            $this->pool->submit(new ClientTask($msgsock, $this->loader, $this->getLogger(), $this->path, $this->config, $this->valueStore));
+            $this->pool->submit(new ClientTask($msgsock, $this->loader, $this->getLogger(), $this->path, $this->config, $this));
         }
         $this->pool->collect(function(ClientTask $client){
             $client->close();
@@ -81,13 +80,18 @@ class ServerTask extends Thread {
         exit(0);
     }
 
-    /**
-     * @return \ScopedValueStore
-     */
-    public function getValueStore(){
-        return $this->valueStore;
+    public function getValues(){
+        return unserialize($this->valueStore);
     }
-
+    public function getValue($name){
+        $valueStore = unserialize($this->valueStore);
+        return isset($valueStore[$name]) ? $valueStore[$name] : null;
+    }
+    public function setValue($name, $value){
+        $valueStore = unserialize($this->valueStore);
+        $valueStore[$name] = $value;
+        $this->valueStore = serialize($valueStore);
+    }
     /**
      * @return \Logger
      */
