@@ -46,6 +46,6 @@ var_dump($data["foo"]); //["1", "2", "3"]
 #### Dynamic Page Registration
 To ease plugin installation, pages can be dynamically registered into Volt. This feature is still experimental and may be expanded upon in a future release.
 ```php
-$page = new DynamicPage("/hello");
+$page = new \volt\api\DynamicPage("/hello");
 $page("This is the content"); //Page is now available at /hello and will display "This is the content"
 ```
