@@ -1,8 +1,10 @@
 <?php
-namespace volt;
+namespace volt\api;
 
 use pocketmine\Server;
 use volt\exception\PluginNotEnabledException;
+use volt\ServerTask;
+use volt\Volt;
 
 class WebsiteData implements \ArrayAccess{
     public function __construct(){
@@ -13,7 +15,7 @@ class WebsiteData implements \ArrayAccess{
         $volt = $this->getVolt();
         if($volt !== null){
             return $volt->getVoltServer()->synchronized(function(ServerTask $thread, $var){
-                $values = $thread->getValueStore()->getValues();
+                $values = $thread->getValues();
                 return isset($values[$var]);
             }, $volt->getVoltServer(), $offset);
         }
@@ -26,7 +28,7 @@ class WebsiteData implements \ArrayAccess{
         $volt = $this->getVolt();
         if($volt !== null){
             return $volt->getVoltServer()->synchronized(function(ServerTask $thread, $var){
-                $values = $thread->getValueStore()->getValue($var);
+                $values = $thread->getValue($var);
                 return isset($values[$var]) ? $values[$var] : null;
             }, $volt->getVoltServer(),$offset);
         }
@@ -39,7 +41,7 @@ class WebsiteData implements \ArrayAccess{
         $volt = $this->getVolt();
         if($volt !== null){
             $volt->getVoltServer()->synchronized(function(ServerTask $thread, $var, $value){
-                $thread->getValueStore()->setValue($var, $value);
+                $thread->setValue($var, $value);
             }, $volt->getVoltServer(), $offset, $value);
         }
         else{

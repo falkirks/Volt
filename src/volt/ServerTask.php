@@ -3,7 +3,7 @@ namespace volt;
 use pocketmine\Thread;
 use pocketmine\utils\TextFormat;
 
-class ServerTask extends Thread {
+class ServerTask extends Thread{
     private $sock;
     private $pool;
     private $logger;
@@ -14,6 +14,7 @@ class ServerTask extends Thread {
         $this->stop = false;
         $this->pool = new \Pool(4, \Worker::CLASS);
         $this->valueStore = serialize([]);
+        $this->templates = serialize([]);
         $this->logger = $logger;
         $this->path = $path;
         $this->config = Volt::$serverConfig;
@@ -64,7 +65,8 @@ class ServerTask extends Thread {
             if (($msgsock = socket_accept($this->sock)) === false) {
                 break;
             }
-            $this->pool->submit(new ClientTask($msgsock, $this->loader, $this->getLogger(), $this->path, $this->config, $this));
+            $client = new ClientTask($msgsock, $this->loader, $this->getLogger(), $this->path, $this->config, $this->templates, $this);
+            $this->pool->submit($client);
         }
         $this->pool->collect(function(ClientTask $client){
             $client->close();
@@ -78,6 +80,17 @@ class ServerTask extends Thread {
 
         $this->pool->shutdown();
         exit(0);
+    }
+    public function addTemplate($path, $template){
+        if(is_file($this->path . $path)) return false;
+        $templates = unserialize($this->templates);
+        $templates[$path] = $template;
+        $this->templates = serialize($templates);
+        return true;
+    }
+    public function getTemplate($name){
+        $templates = unserialize($this->templates);
+        return isset($templates[$name]) ? $templates[$name] : null;
     }
 
     public function getValues(){

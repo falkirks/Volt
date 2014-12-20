@@ -3,6 +3,7 @@ namespace volt;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat;
+use volt\api\DynamicPage;
 
 class Volt extends PluginBase{
     /** @var  Config */
@@ -39,10 +40,6 @@ class Volt extends PluginBase{
         }
         return false;*/
         $this->getLogger()->warning(TextFormat::DARK_AQUA . 'bindTo($n, Callable $func)' . TextFormat::RESET . TextFormat::YELLOW . " is no longer supported.");
-    }
-    public function makeMeASandwich(PluginBase $plugin){
-        $this->getLogger()->info("* gives " . TextFormat::DARK_AQUA . $plugin->getName() . TextFormat::WHITE . " a sandwich.");
-        return new MonitoredWebsiteData($plugin->getName());
     }
     public function getVoltServer(){
         return $this->server;
