@@ -27,11 +27,11 @@ In an optimal setting you should identify yourself to Volt. This will allow Volt
 
 ```php
 /* Option #1 (Recommended) */
-$data = new volt\api\MonitoredWebsiteData($this); //Called from within a PluginBase
+$data = new \volt\api\MonitoredWebsiteData($this); //Called from within a PluginBase
 /* Option #2 */
-$data = new volt\api\MonitoredWebsiteData("PluginName"); //Called from anywhere
+$data = new \volt\api\MonitoredWebsiteData("PluginName"); //Called from anywhere
 /* Option #3 (Not recommended) */
-$data = new volt\api\MonitoredWebsiteData(); //Called from within a PluginBase, and requires class name to equal plugin name
+$data = new \volt\api\MonitoredWebsiteData(); //Called from within a PluginBase, and requires class name to equal plugin name
 ```
 If an identification request fails a `volt\exception\PluginIdentificationException` will be thrown.
 
