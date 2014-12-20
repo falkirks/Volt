@@ -11,7 +11,7 @@ Volt is an hyper-powerful integrated website solution for PocketMine. Driven by 
 * **API.** The API has been entirely rewritten to be more fun to use. It is much more logical and powerful.
 
 ### Volt API
-The API is still tentative and might undergo some large structural changes before its release, so don't get too attached to it. The API centralizes on `WebsiteData` objects which are magical objects which allow interaction with the server.
+The API is still tentative and might undergo some large structural changes before its release, so don't get too attached to it. The API centralizes on `WebsiteData` objects which are magical objects that allow interaction with the server.
 
 #### Getting API access
 ##### Anonymous
