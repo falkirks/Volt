@@ -19,7 +19,9 @@ class ClientTask extends \Threaded{
     }
     public function run(){
         $this->loader->register(true);
-        $engine = new Handlebars;
+        $engine = new Handlebars([
+            "loader" => new TemplateLoader($this, $this->basePath)
+        ]);
         $buf = '';
         $headers = [];
         while ($message = socket_read($this->clientSocket, 2048, PHP_NORMAL_READ)) {
@@ -43,17 +45,7 @@ class ClientTask extends \Threaded{
         switch(strtoupper($verb)){
             case 'GET':
                 //$msg .= $this->getFile($path);
-                $msg .= $engine->render(
-                    'Planets:<br />{{#each planets}}<h6>{{this}}</h6>{{/each}}',
-                    array(
-                        'planets' => array(
-                            "Mercury",
-                            "Venus",
-                            "Earth",
-                            "Mars"
-                        )
-                    )
-                );
+                $msg .= $engine->render($path, []);
                 break;
             case 'POST':
 

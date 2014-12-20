@@ -85,13 +85,5 @@ class ServerTask extends Thread {
     public function getLogger(){
         return $this->logger;
     }
-
-    public function replace($data){
-        preg_match_all('/{{(.*?)}}/', $data, $items);
-        $items = $items[1];
-        $v = unserialize($this->vars);
-        foreach ($items as $i) if(isset($v[$i])) $data = str_replace("{{" . $i . "}}", $v[$i], $data);
-        return $data;
-    }
 }
 
