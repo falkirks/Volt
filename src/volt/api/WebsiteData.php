@@ -2,7 +2,6 @@
 namespace volt\api;
 
 use pocketmine\Server;
-use Traversable;
 use volt\exception\PluginNotEnabledException;
 use volt\ServerTask;
 use volt\Volt;
@@ -49,7 +48,7 @@ class WebsiteData implements \ArrayAccess, \Countable, \IteratorAggregate{
             throw new PluginNotEnabledException;
         }
     }
-    
+
     public function getIterator(){
         $volt = $this->getVolt();
         if($volt !== null) {
