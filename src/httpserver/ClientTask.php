@@ -38,14 +38,16 @@ class ClientTask extends \Threaded{
         if (!$buf = trim($buf)) {
             return;
         }
-        //$talkback = "PHP: You said '$buf'.\n";
+        socket_getpeername($this->clientSocket, $ip);
         $msg = $this->h;
-        $path = $this->sanitizePath(explode(" ", reset($headers))[0]);
+        $url = explode(" ", reset($headers))[0];
+        $query = parse_url("http://e.co" . $url , PHP_URL_QUERY);
+        $path = $this->sanitizePath($url);
         $verb = key($headers);
         switch(strtoupper($verb)){
             case 'GET':
                 //$msg .= $this->getFile($path);
-                $msg .= $engine->render($path, []);
+                $msg .= $engine->render($path, ["_request" => ["query" => $query, "path" => $path, "ip" => $ip]]);
                 break;
             case 'POST':
 
