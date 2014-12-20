@@ -35,7 +35,7 @@ var_dump($data["foo"]); //["1", "2", "3"]
 #### Changing the scope
 Obviously some variables should only be available to /foo/* and some other should only be accessible to /foo/bar/*
 
-**Note** Variables in higher scopes won't be available to lower scope. So if I am in $data->1->2, I won't be able to see $data->1 variables.
+**Note** Variables in higher scopes won't be available to lower scope. So if I am in `$data->1->2`, I won't be able to see `$data->1` variables.
 
 ```php
 $data = new \volt\WebsiteData(); //We are using anon
