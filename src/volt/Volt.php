@@ -5,15 +5,15 @@ use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat;
 
 class Volt extends PluginBase{
-    public $server, $bound, $task;
     /** @var  Config */
     public static $serverConfig;
+    /** @var  ServerTask */
+    private $server;
     public function onEnable(){
         $this->saveDefaultConfig();
         self::$serverConfig = $this->getConfig();
         $this->getLogger()->warning("volt 3.0 preview is mystical, magical and " . TextFormat::RED . "buggy" . TextFormat::YELLOW . ".");
         if(!is_dir($this->getServer()->getDataPath() . "volt")) mkdir($this->getServer()->getDataPath() . "volt");
-        $this->bound = [];
         $this->server = new ServerTask($this->getServer()->getDataPath() . "volt", $this->getServer()->getLoader(), $this->getServer()->getLogger());
         /*if ($this->server->stop === false){
             $this->task = new PostCollectionTask($this);
@@ -43,6 +43,9 @@ class Volt extends PluginBase{
     public function makeMeASandwich(PluginBase $plugin){
         $this->getLogger()->info("* gives " . TextFormat::DARK_AQUA . $plugin->getName() . TextFormat::WHITE . " a sandwich.");
         return new MonitoredWebsiteData($plugin->getName());
+    }
+    public function getVoltServer(){
+        return $this->server;
     }
     public function unbindServer(){
         $this->server->synchronized(function($thread){

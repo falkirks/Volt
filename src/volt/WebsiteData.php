@@ -1,68 +1,54 @@
 <?php
 namespace volt;
 
+use pocketmine\Server;
+use volt\exception\PluginNotEnabledException;
+
 class WebsiteData implements \ArrayAccess{
     public function __construct(array $page = []){
         $this->page = $page;
     }
-    /**
-     * (PHP 5 &gt;= 5.0.0)<br/>
-     * Whether a offset exists
-     * @link http://php.net/manual/en/arrayaccess.offsetexists.php
-     * @param mixed $offset <p>
-     * An offset to check for.
-     * </p>
-     * @return boolean true on success or false on failure.
-     * </p>
-     * <p>
-     * The return value will be casted to boolean if non-boolean was returned.
-     */
+
     public function offsetExists($offset){
-        // TODO: Implement offsetExists() method.
+        $volt = $this->getVolt();
+        if($volt !== null){
+            return $volt->getVoltServer()->synchronized(function(ServerTask $thread, array $scope, $var){
+                $values = $thread->getValueStore()->getScopeValues($scope);
+                return isset($values[$var]);
+            }, $volt->getVoltServer(), $this->page, $offset);
+        }
+        else{
+            throw new PluginNotEnabledException;
+        }
     }
 
-    /**
-     * (PHP 5 &gt;= 5.0.0)<br/>
-     * Offset to retrieve
-     * @link http://php.net/manual/en/arrayaccess.offsetget.php
-     * @param mixed $offset <p>
-     * The offset to retrieve.
-     * </p>
-     * @return mixed Can return all value types.
-     */
-    public function offsetGet($offset)
-    {
-        // TODO: Implement offsetGet() method.
+    public function offsetGet($offset){
+        $volt = $this->getVolt();
+        if($volt !== null){
+            return $volt->getVoltServer()->synchronized(function(ServerTask $thread, array $scope, $var){ //TODO consider limiting to current scope
+                $values = $thread->getValueStore()->getScopeValues($scope);
+                return isset($values[$var]) ? $values[$var] : null;
+            }, $volt->getVoltServer(), $this->page, $offset);
+        }
+        else{
+            throw new PluginNotEnabledException;
+        }
     }
 
-    /**
-     * (PHP 5 &gt;= 5.0.0)<br/>
-     * Offset to set
-     * @link http://php.net/manual/en/arrayaccess.offsetset.php
-     * @param mixed $offset <p>
-     * The offset to assign the value to.
-     * </p>
-     * @param mixed $value <p>
-     * The value to set.
-     * </p>
-     * @return void
-     */
-    public function offsetSet($offset, $value)
-    {
-        // TODO: Implement offsetSet() method.
+    public function offsetSet($offset, $value){
+        $volt = $this->getVolt();
+        if($volt !== null){
+            $volt->getVoltServer()->synchronized(function(ServerTask $thread, array $scope, $var, $value){ //TODO consider limiting to current scope
+                $thread->getValueStore()->setValue($scope, $var, $value);
+            }, $volt->getVoltServer(), $this->page, $offset, $value);
+        }
+        else{
+            throw new PluginNotEnabledException;
+        }
     }
-
-    /**
-     * (PHP 5 &gt;= 5.0.0)<br/>
-     * Offset to unset
-     * @link http://php.net/manual/en/arrayaccess.offsetunset.php
-     * @param mixed $offset <p>
-     * The offset to unset.
-     * </p>
-     * @return void
-     */
+    
     public function offsetUnset($offset){
-        // TODO: Implement offsetUnset() method.
+        $this->offsetSet($offset, null);
     }
 
     function __get($name){
@@ -70,5 +56,8 @@ class WebsiteData implements \ArrayAccess{
         $page[] = $name;
         return new WebsiteData($page);
     }
-
+    protected function getVolt(){
+        $plugin = Server::getInstance()->getPluginManager()->getPlugin("Volt");
+        return (($plugin instanceof Volt && $plugin->isEnabled()) ? $plugin : null);
+    }
 }

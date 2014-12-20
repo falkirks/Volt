@@ -8,11 +8,12 @@ class ServerTask extends Thread {
     private $pool;
     private $logger;
     private $config;
-    public $vars, $stop, $path, $post;
+    private $valueStore;
+    public $stop, $path;
     public function __construct($path, \ClassLoader $loader, \Logger $logger) {
         $this->stop = false;
         $this->pool = new \Pool(4, \Worker::CLASS);
-        $this->vars = serialize([]);
+        $this->valueStore = new \ScopedValueStore();
         $this->logger = $logger;
         $this->path = $path;
         $this->config = Volt::$serverConfig;
@@ -77,6 +78,13 @@ class ServerTask extends Thread {
 
         $this->pool->shutdown();
         exit(0);
+    }
+
+    /**
+     * @return \ScopedValueStore
+     */
+    public function getValueStore(){
+        return $this->valueStore;
     }
 
     /**
