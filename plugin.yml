@@ -1,6 +1,19 @@
+# You should NOT edit this file to change permissions
 name: Volt
 main: volt\Volt
 version: 3.0-beta2
 author: Falkirks
 api: [1.7.0]
 load: POSTWORLD
+permissions:
+ volt:
+  default: op
+  children:
+   volt.command:
+    default: op
+    children:
+     volt.command.api:
+      default: true
+      children:
+        volt.command.api.list:
+          deafult: op

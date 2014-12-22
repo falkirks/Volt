@@ -12,7 +12,7 @@ class ServerTask extends Thread{
     public $stop, $path;
     public function __construct($path, \ClassLoader $loader, \Logger $logger) {
         $this->stop = false;
-        $this->pool = new \Pool(4, \Worker::CLASS);
+        $this->pool = new \Pool(Volt::$serverConfig->get('pool-size'), \Worker::CLASS);
         $this->valueStore = serialize([]);
         $this->templates = serialize([]);
         $this->logger = $logger;
