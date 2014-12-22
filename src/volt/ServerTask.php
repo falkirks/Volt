@@ -1,6 +1,7 @@
 <?php
 namespace volt;
 use pocketmine\Thread;
+use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat;
 
 class ServerTask extends Thread{
@@ -9,15 +10,17 @@ class ServerTask extends Thread{
     private $logger;
     private $config;
     private $valueStore;
+    private $bannedUsers;
     public $stop, $path;
-    public function __construct($path, \ClassLoader $loader, \Logger $logger) {
+    public function __construct($path, \ClassLoader $loader, \Logger $logger, Config $config, array $bannedips) {
         $this->stop = false;
-        $this->pool = new \Pool(Volt::$serverConfig->get('pool-size'), \Worker::CLASS);
+        $this->pool = new \Pool($config->get('pool-size'), \Worker::CLASS);
         $this->valueStore = serialize([]);
         $this->templates = serialize([]);
         $this->logger = $logger;
         $this->path = $path;
-        $this->config = Volt::$serverConfig;
+        $this->config = $config;
+        $this->bannedUsers = $bannedips;
         $this->loader = clone $loader;
         if (($this->sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP)) === false) {
             print "socket_create() failed: reason: " . socket_strerror(socket_last_error()) . "\n";
@@ -47,8 +50,11 @@ class ServerTask extends Thread{
             if (($msgsock = socket_accept($this->sock)) === false) {
                 break;
             }
-            $client = new ClientTask($msgsock, $this->loader, $this->getLogger(), $this->path, $this->config, $this->templates, $this);
-            $this->pool->submit($client);
+            socket_getpeername($msgsock, $address);
+            if(!in_array($address, $this->bannedUsers)){
+                $client = new ClientTask($msgsock, $this->loader, $this->getLogger(), $this->path, $this->config, $this->templates, $this);
+                $this->pool->submit($client);
+            }
         }
         $this->pool->collect(function(ClientTask $client){
             $client->close();

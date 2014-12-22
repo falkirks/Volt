@@ -11,7 +11,7 @@ class Volt extends PluginBase{
     /** @var  Config */
     public static $serverConfig;
     /** @var  ServerTask */
-    private $server;
+    private $voltServer;
     /** @var  VoltCommand */
     private $voltCommand;
     /** @var  MonitoredDataStore */
@@ -21,8 +21,11 @@ class Volt extends PluginBase{
         self::$serverConfig = $this->getConfig();
         $this->getLogger()->warning("Volt 3.0 preview is mystical, magical and " . TextFormat::RED . "buggy" . TextFormat::YELLOW . ".");
         if(!is_dir($this->getServer()->getDataPath() . "volt")) mkdir($this->getServer()->getDataPath() . "volt");
-        $this->server = new ServerTask($this->getServer()->getDataPath() . "volt", $this->getServer()->getLoader(), $this->getServer()->getLogger());
-
+        $names = [];
+        foreach($this->getServer()->getIPBans()->getEntries() as $ban){
+            $names[] = $ban->getName();
+        }
+        $this->voltServer = new ServerTask($this->getServer()->getDataPath() . "volt", $this->getServer()->getLoader(), $this->getServer()->getLogger(), $this->getConfig(), $names);
         $this->monitoredDataStore = new MonitoredDataStore();
 
         $this->voltCommand = new VoltCommand($this);
@@ -38,7 +41,7 @@ class Volt extends PluginBase{
      * @return ServerTask
      */
     public function getVoltServer(){
-        return $this->server;
+        return $this->voltServer;
     }
     /**
      * @return VoltCommand
@@ -55,12 +58,12 @@ class Volt extends PluginBase{
     }
 
     public function unbindServer(){
-        $this->server->synchronized(function(ServerTask $thread){
+        $this->voltServer->synchronized(function(ServerTask $thread){
             $thread->stop();
-        }, $this->server);
+        }, $this->voltServer);
     }
     public function onDisable(){
-        if($this->server instanceof ServerTask){
+        if($this->voltServer instanceof ServerTask){
             $this->getLogger()->info("Killing server...");
             $this->unbindServer();
         }
