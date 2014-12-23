@@ -24,6 +24,7 @@ In an optimal setting you should identify yourself to Volt. This will allow Volt
 * PluginBase (Recommended)
 * Plugin name
 * Auto-detect (Not recommended)
+
 ###### `WebsiteData`
 ```php
 /* Option #1 (Recommended) */
