@@ -4,9 +4,15 @@ namespace volt;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat;
+use volt\api\Subscription;
 use volt\command\VoltCommand;
 use volt\monitor\MonitoredDataStore;
 
+/**
+ * Class Volt
+ * @package volt
+ * @volt-api peta
+ */
 class Volt extends PluginBase{
     /** @var  Config */
     public static $serverConfig;

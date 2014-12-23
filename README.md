@@ -11,7 +11,25 @@ Volt is an hyper-powerful integrated website solution for PocketMine. Driven by 
 * **API.** The API has been entirely rewritten to be more fun to use. It is much more logical and powerful.
 
 ### Volt API
-The API is still tentative and might undergo some large structural changes before its release, so don't get too attached to it. The API centralizes on `WebsiteData` objects which are magical objects that allow interaction with the server. These objects mimic arrays by implementing `\ArrayAccess`, `\Countable`, and `\IteratorAggregate`.
+The API is still tentative and might undergo some large structural changes before its release, so don't get too attached to it. The API centralizes on `WebsiteData` objects which are magical objects that allow interaction with the server. These objects mimic arrays by implementing `\ArrayAccess`, `\Countable`, and `\IteratorAggregate`. The API also exposes `DynamicPage` for registering pages and `HandlebarsHelper` for injecting code into handlebars.
+
+#### API subscription levels
+Volt's API will offer features which can cause more harm to PocketMine. For example, using a `HandlebarsHelper` can easily cause a segfault or a memory leak if not used correctly. In order to combat this, Volt provides an API subscription system. There are four subscription levels. 
+* `micro` (Default) - `DynamicPage` and `WebsiteData`
+* `deci`- Not currently used
+* `kilo` - `HandlebarsHelper`
+* `mega` - Direct access to ServerTask (not enforced yet)
+* `peta` - Not currently used
+
+You can specify an API in the base class of your plugin using a doc comment on the class. The following comment is used on the Volt main class
+```php
+    /**
+     * Class Volt
+     * @package volt
+     * @volt-api peta
+     */
+```
+**Note** If you want to save space you can remove the first two lines of the comment.
 
 #### Getting API access
 ##### Anonymous

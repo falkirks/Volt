@@ -3,7 +3,6 @@ namespace volt\api;
 
 use pocketmine\plugin\PluginBase;
 use pocketmine\Server;
-use volt\exception\APIFeatureNotAvailableException;
 use volt\exception\PluginIdentificationException;
 use volt\exception\PluginNotEnabledException;
 use volt\ServerTask;
@@ -30,9 +29,7 @@ class HandlebarsHelper{
             }
         }
         if($this->plugin == null) throw new PluginIdentificationException;
-        $reflection = new \ReflectionClass(Server::getInstance()->getPluginManager()->getPlugin($this->plugin));
-        if(stripos($reflection->getDocComment(), "@volt-api dev") === false) throw new APIFeatureNotAvailableException;
-
+        Subscription::assertGreater(Server::getInstance()->getPluginManager()->getPlugin($this->plugin), Subscription::KILO);
         $this->getVolt()->getMonitoredDataStore()->createPlugin($this->plugin);
 
         $this->name = $name;
