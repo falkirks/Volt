@@ -82,4 +82,7 @@ $page("This is the content"); //Page is now available at /hello and will display
 ```
 
 #### Handlebars Helpers with `HandlebarsHelper`
-Helpers allow custom features to be added to the handlebars language. Helpers are callable and should be anonymous functions. Due to the threaded nature of Volt, helpers are unstable and can easily cause issues. In order to use helpers, you will need to see your `@volt-api` level to kilo.
+Helpers allow custom features to be added to the handlebars language. Helpers are callable and should be anonymous functions. Due to the threaded nature of Volt, helpers are unstable and can easily cause issues. In order to use helpers, you will need to set your `@volt-api` to `kilo` or higher.
+
+#### Direct thread access with `ServerThread`
+Sometimes the API doesn't cut it and you might need direct access the the server thread. You can do this using a `ServerThread` object. These objects will forward all function calls to the volt server. To use `ServerThread`, you will need to set your `@volt-api`to `mega` or higher.
