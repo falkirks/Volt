@@ -6,6 +6,7 @@ use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat;
 use volt\api\Subscription;
 use volt\command\VoltCommand;
+use volt\exception\InternalMethodException;
 use volt\monitor\MonitoredDataStore;
 
 /**
@@ -45,9 +46,19 @@ class Volt extends PluginBase{
     }
     /**
      * @return ServerTask
+     * @throws InternalMethodException
      */
     public function getVoltServer(){
-        return $this->voltServer;
+        $trace = debug_backtrace();
+        if (isset($trace[1])) {
+            $fullClass = explode("\\", $trace[1]['class']);
+            if($fullClass[0] === __NAMESPACE__){
+                return $this->voltServer;
+            }
+        }
+        else{
+            throw new InternalMethodException;
+        }
     }
     /**
      * @return VoltCommand

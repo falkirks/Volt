@@ -8,25 +8,7 @@ use volt\exception\PluginIdentificationException;
 class MonitoredWebsiteData extends WebsiteData{
 
     final public function __construct($name = false){
-        if($name == false){
-            $trace = debug_backtrace();
-            if (isset($trace[1])) {
-                $fullClass = explode("\\", $trace[1]['class']);
-                $name = array_pop($fullClass);
-
-            }
-        }
-
-        if($name instanceof PluginBase) {
-            $this->name = $name->getName();
-        }
-        else{
-            if(Server::getInstance()->getPluginManager()->getPlugin($name) instanceof PluginBase){
-                $this->name = $name;
-            }
-        }
-        if($this->name == null) throw new PluginIdentificationException;
-        $this->getVolt()->getMonitoredDataStore()->createPlugin($this->name);
+        $this->name = IdentificationController::identify($name);
         parent::__construct();
     }
     public function offsetExists($offset){

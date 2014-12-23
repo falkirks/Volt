@@ -12,26 +12,7 @@ class DynamicPage{
     private $name;
     private $plugin;
     public function __construct($name, $plugin = false){
-        if($plugin == false){
-            $trace = debug_backtrace();
-            if (isset($trace[1])) {
-                $fullClass = explode("\\", $trace[1]['class']);
-                $plugin = array_pop($fullClass);
-
-            }
-        }
-
-        if($name instanceof PluginBase) {
-            $this->plugin = $name->getName();
-        }
-        else{
-            if(Server::getInstance()->getPluginManager()->getPlugin($plugin) instanceof PluginBase){
-                $this->plugin = $name;
-            }
-        }
-        if($this->plugin == null) throw new PluginIdentificationException;
-        $this->getVolt()->getMonitoredDataStore()->createPlugin($this->plugin);
-
+        $this->plugin = IdentificationController::identify($plugin);
         $this->name = $name;
     }
     public function __invoke($content){

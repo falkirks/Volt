@@ -1,0 +1,16 @@
+#miner
+{
+  "name": "falkirks/Volt",
+  "description": "Hyper-powerful web server for PocketMine",
+  "minimum-stability": "stable",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Falkirks",
+      "email": "me@falkirks.com"
+    }
+  ],
+  "require": {
+    "xamin/handlebars.php": "dev-master"
+  }
+}
