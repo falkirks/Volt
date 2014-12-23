@@ -1,7 +1,7 @@
 # You should NOT edit this file to change permissions
 name: Volt
 main: volt\Volt
-version: 3.0-beta3
+version: 3.0-beta4
 author: Falkirks
 api: [1.7.0]
 load: POSTWORLD
