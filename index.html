@@ -28,9 +28,9 @@
           <li><a href="https://github.com/Falkirks/Volt">View On <strong>GitHub</strong></a></li>
         </ul>
       </header>
-      <section>
+<section>
         <h1>
-<a id="-volt" class="anchor" href="#-volt" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong><em>Volt</em></strong>
+<a id="-volt" class="anchor" href="#-volt" aria-hidden="true"><span class="octicon octicon-link"></span></a> <strong><em>Volt</em></strong>
 </h1>
 
 <h6>
@@ -55,7 +55,38 @@
 <h3>
 <a id="volt-api" class="anchor" href="#volt-api" aria-hidden="true"><span class="octicon octicon-link"></span></a>Volt API</h3>
 
-<p>The API is still tentative and might undergo some large structural changes before its release, so don't get too attached to it. The API centralizes on <code>WebsiteData</code> objects which are magical objects that allow interaction with the server. These objects mimic arrays by implementing <code>\ArrayAccess</code>, <code>\Countable</code>, and <code>\IteratorAggregate</code>.</p>
+<p>The API is still tentative and might undergo some large structural changes before its release, so don't get too attached to it. The API centralizes on <code>WebsiteData</code> objects which are magical objects that allow interaction with the server. These objects mimic arrays by implementing <code>\ArrayAccess</code>, <code>\Countable</code>, and <code>\IteratorAggregate</code>. The API also exposes <code>DynamicPage</code> for registering pages and <code>HandlebarsHelper</code> for injecting code into handlebars.</p>
+
+<h4>
+<a id="api-subscription-levels" class="anchor" href="#api-subscription-levels" aria-hidden="true"><span class="octicon octicon-link"></span></a>API subscription levels</h4>
+
+<p>Volt's API will offer features which can cause more harm to PocketMine. For example, using a <code>HandlebarsHelper</code> can easily cause a segfault or a memory leak if not used correctly. In order to combat this, Volt provides an API subscription system. There are four subscription levels. </p>
+
+<ul>
+<li>
+<code>micro</code> (Default) - <code>DynamicPage</code> and <code>WebsiteData</code>
+</li>
+<li>
+<code>deci</code>- Not currently used</li>
+<li>
+<code>kilo</code> - <code>HandlebarsHelper</code>
+</li>
+<li>
+<code>mega</code> - Direct access to <code>ServerTask</code> (not enforced yet)</li>
+<li>
+<code>peta</code> - Not currently used</li>
+</ul>
+
+<p>You can specify an API level to consume in the base class of your plugin using a doc comment on the class. The following comment is used on the Volt main class</p>
+
+<div class="highlight highlight-php"><pre><span class="pl-s2">    <span class="pl-c">/**</span></span>
+<span class="pl-s2"><span class="pl-c">     * Class Volt</span></span>
+<span class="pl-s2"><span class="pl-c">     * <span class="pl-k">@package</span> volt</span></span>
+<span class="pl-s2"><span class="pl-c">     * @volt-api peta</span></span>
+<span class="pl-s2"><span class="pl-c">     */</span></span>
+<span class="pl-s2">     <span class="pl-st">class</span> <span class="pl-en">Volt</span> <span class="pl-s">extends</span> <span class="pl-e">PluginBase</span>{</span></pre></div>
+
+<p><strong>Note</strong> If you want to save space you can remove the first two lines of the comment.</p>
 
 <h4>
 <a id="getting-api-access" class="anchor" href="#getting-api-access" aria-hidden="true"><span class="octicon octicon-link"></span></a>Getting API access</h4>
@@ -70,13 +101,17 @@
 <h5>
 <a id="identified" class="anchor" href="#identified" aria-hidden="true"><span class="octicon octicon-link"></span></a>Identified</h5>
 
-<p>In an optimal setting you should identify yourself to Volt. This will allow Volt to create logs of your API usage. There are three options for identification</p>
+<p>In an optimal setting you should identify yourself to Volt. This will allow Volt to create logs of your API usage. Identification is required for <code>DynamicPage</code> and <code>HandlebarsHelper</code>. There are three options for identification</p>
 
 <ul>
 <li>PluginBase (Recommended)</li>
 <li>Plugin name</li>
 <li>Auto-detect (Not recommended)</li>
 </ul>
+
+<h6>
+<a id="websitedata" class="anchor" href="#websitedata" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>WebsiteData</code>
+</h6>
 
 <div class="highlight highlight-php"><pre><span class="pl-s2"><span class="pl-c">/* Option #1 (Recommended) */</span></span>
 <span class="pl-s2"><span class="pl-vo">$data</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-s3">\volt\api\</span><span class="pl-s3">MonitoredWebsiteData</span>(<span class="pl-vo">$this</span>); <span class="pl-c">//Called from within a PluginBase</span></span>
@@ -85,10 +120,22 @@
 <span class="pl-s2"><span class="pl-c">/* Option #3 (Not recommended) */</span></span>
 <span class="pl-s2"><span class="pl-vo">$data</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-s3">\volt\api\</span><span class="pl-s3">MonitoredWebsiteData</span>(); <span class="pl-c">//Called from within a PluginBase, and requires class name to equal plugin name</span></span></pre></div>
 
+<h6>
+<a id="dynamicpage" class="anchor" href="#dynamicpage" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>DynamicPage</code>
+</h6>
+
+<div class="highlight highlight-php"><pre><span class="pl-s2"><span class="pl-c">/* Option #1 (Recommended) */</span></span>
+<span class="pl-s2"><span class="pl-vo">$data</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-s3">\volt\api\</span><span class="pl-s3">DynamicPage</span>(<span class="pl-s1"><span class="pl-pds">"</span>/page<span class="pl-pds">"</span></span>, <span class="pl-vo">$this</span>); <span class="pl-c">//Called from within a PluginBase</span></span>
+<span class="pl-s2"><span class="pl-c">/* Option #2 */</span></span>
+<span class="pl-s2"><span class="pl-vo">$data</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-s3">\volt\api\</span><span class="pl-s3">DynamicPage</span>(<span class="pl-s1"><span class="pl-pds">"</span>/page<span class="pl-pds">"</span></span>, <span class="pl-s1"><span class="pl-pds">"</span>PluginName<span class="pl-pds">"</span></span>); <span class="pl-c">//Called from anywhere</span></span>
+<span class="pl-s2"><span class="pl-c">/* Option #3 (Not recommended) */</span></span>
+<span class="pl-s2"><span class="pl-vo">$data</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-s3">\volt\api\</span><span class="pl-s3">DynamicPage</span>(<span class="pl-s1"><span class="pl-pds">"</span>/page<span class="pl-pds">"</span></span>); <span class="pl-c">//Called from within a PluginBase, and requires class name to equal plugin name</span></span></pre></div>
+
 <p>If an identification request fails a <code>volt\exception\PluginIdentificationException</code> will be thrown.</p>
 
 <h4>
-<a id="setting-and-getting-values" class="anchor" href="#setting-and-getting-values" aria-hidden="true"><span class="octicon octicon-link"></span></a>Setting and getting values</h4>
+<a id="setting-and-getting-values-with-websitedata" class="anchor" href="#setting-and-getting-values-with-websitedata" aria-hidden="true"><span class="octicon octicon-link"></span></a>Setting and getting values with <code>WebsiteData</code>
+</h4>
 
 <p>Once you have a <code>WebsiteData</code> object, you get a link to the global scope of handlebars variables. It is highly recommended to put all your variables in a namespace for your plugin, this helps avoid collisions.</p>
 
@@ -97,12 +144,19 @@
 <span class="pl-s2"><span class="pl-s3">var_dump</span>(<span class="pl-vo">$data</span>[<span class="pl-s1"><span class="pl-pds">"</span>foo<span class="pl-pds">"</span></span>]); <span class="pl-c">//["1", "2", "3"]</span></span></pre></div>
 
 <h4>
-<a id="dynamic-page-registration" class="anchor" href="#dynamic-page-registration" aria-hidden="true"><span class="octicon octicon-link"></span></a>Dynamic Page Registration</h4>
+<a id="dynamic-page-registration-with-dynamicpage" class="anchor" href="#dynamic-page-registration-with-dynamicpage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Dynamic Page Registration with <code>DynamicPage</code>
+</h4>
 
 <p>To ease plugin installation, pages can be dynamically registered into Volt. This feature is still experimental and may be expanded upon in a future release.</p>
 
-<div class="highlight highlight-php"><pre><span class="pl-s2"><span class="pl-vo">$page</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-s3">\volt\api\</span><span class="pl-s3">DynamicPage</span>(<span class="pl-s1"><span class="pl-pds">"</span>/hello<span class="pl-pds">"</span></span>);</span>
+<div class="highlight highlight-php"><pre><span class="pl-s2"><span class="pl-vo">$page</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-s3">\volt\api\</span><span class="pl-s3">DynamicPage</span>(<span class="pl-s1"><span class="pl-pds">"</span>/hello<span class="pl-pds">"</span></span>, <span class="pl-vo">$this</span>); <span class="pl-c">// For second param see identified. </span></span>
 <span class="pl-s2">$<span class="pl-vo">page</span>(<span class="pl-s1"><span class="pl-pds">"</span>This is the content<span class="pl-pds">"</span></span>); <span class="pl-c">//Page is now available at /hello and will display "This is the content"</span></span></pre></div>
+
+<h4>
+<a id="handlebars-helpers-with-handlebarshelper" class="anchor" href="#handlebars-helpers-with-handlebarshelper" aria-hidden="true"><span class="octicon octicon-link"></span></a>Handlebars Helpers with <code>HandlebarsHelper</code>
+</h4>
+
+<p>Helpers allow custom features to be added to the handlebars language. Helpers are callable and should be anonymous functions. Due to the threaded nature of Volt, helpers are unstable and can easily cause issues. In order to use helpers, you will need to see your <code>@volt-api</code> level to kilo.</p>
       </section>
     </div>
     <script src="javascripts/scale.fix.js"></script>
