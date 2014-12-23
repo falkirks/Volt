@@ -80,4 +80,4 @@ $page("This is the content"); //Page is now available at /hello and will display
 ```
 
 #### Handlebars Helpers with `HandlebarsHelper`
-Helpers allow custom features to be added to the handlebars language. Helpers are callable and should be anonymous functions. Due to the threaded nature of Volt, helpers are unstable and can easily cause issues. In order to use helpers, you will need to see your `@volt-api` level to "dev".
+Helpers allow custom features to be added to the handlebars language. Helpers are callable and should be anonymous functions. Due to the threaded nature of Volt, helpers are unstable and can easily cause issues. In order to use helpers, you will need to see your `@volt-api` level to kilo.
