@@ -11,6 +11,8 @@ class ServerTask extends Thread{
     private $config;
     private $valueStore;
     private $bannedUsers;
+    /** @var  callable[] */
+    private $helpers;
     public $stop, $path;
     public function __construct($path, \ClassLoader $loader, \Logger $logger, Config $config, array $bannedips) {
         $this->stop = false;
@@ -21,6 +23,7 @@ class ServerTask extends Thread{
         $this->path = $path;
         $this->config = $config;
         $this->bannedUsers = $bannedips;
+        $this->helpers = [];
         $this->loader = clone $loader;
         if (($this->sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP)) === false) {
             print "socket_create() failed: reason: " . socket_strerror(socket_last_error()) . "\n";
@@ -52,7 +55,7 @@ class ServerTask extends Thread{
             }
             socket_getpeername($msgsock, $address);
             if(!in_array($address, $this->bannedUsers)){
-                $client = new ClientTask($msgsock, $this->loader, $this->getLogger(), $this->path, $this->config, $this->templates, $this);
+                $client = new ClientTask($msgsock, $this->loader, $this->getLogger(), $this->path, $this->config, $this->templates, $this->helpers, $this);
                 $this->pool->submit($client);
             }
         }
@@ -92,6 +95,12 @@ class ServerTask extends Thread{
         $valueStore = unserialize($this->valueStore);
         $valueStore[$name] = $value;
         $this->valueStore = serialize($valueStore);
+    }
+    public function addHelper($name, callable $helper){
+        $this->helpers[$name] = clone $helper;
+    }
+    public function getHelper($name){
+        return clone $this->helpers[$name];
     }
     /**
      * @return \Logger

@@ -2,6 +2,7 @@
 namespace volt;
 
 use Handlebars\Handlebars;
+use Handlebars\Helpers;
 use pocketmine\utils\Config;
 
 class ClientTask extends \Threaded{
@@ -16,7 +17,9 @@ class ClientTask extends \Threaded{
     private $serverTask;
     /** @var TemplateLoader  */
     private $templateLoader;
-    public function __construct($clientSocket, \ClassLoader $loader, \Logger $logger, $path, Config $config, $templates, ServerTask $serverTask){
+    /** @var  callable[] */
+    private $helpers;
+    public function __construct($clientSocket, \ClassLoader $loader, \Logger $logger, $path, Config $config, $templates, $helpers, ServerTask $serverTask){
         $this->clientSocket = $clientSocket;
         $this->h = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n";
         $this->loader = clone $loader;
@@ -24,12 +27,14 @@ class ClientTask extends \Threaded{
         $this->basePath = $path;
         $this->config = $config;
         $this->serverTask = $serverTask;
+        $this->helpers = new Helpers($helpers);
         $this->templateLoader = new TemplateLoader($this, $this->basePath, $templates);
     }
     public function run(){
         $this->loader->register(true);
         $engine = new Handlebars([
-            "loader" => $this->templateLoader
+            "loader" => $this->templateLoader,
+            "helpers" => $this->helpers
         ]);
         $buf = '';
         $headers = [];
