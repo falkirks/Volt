@@ -18,7 +18,7 @@ Volt's API will offer features which can cause more harm to PocketMine. For exam
 * `micro` (Default) - `DynamicPage` and `WebsiteData`
 * `deci`- Not currently used
 * `kilo` - `HandlebarsHelper`
-* `mega` - Direct access to ServerTask (not enforced yet)
+* `mega` - Direct access to `ServerTask` (not enforced yet)
 * `peta` - Not currently used
 
 You can specify an API in the base class of your plugin using a doc comment on the class. The following comment is used on the Volt main class
