@@ -98,6 +98,7 @@ class ServerTask extends Thread{
     }
     public function addHelper($name, callable $helper){
         $this->helpers[$name] = clone $helper;
+        return true; //For future use
     }
     public function getHelper($name){
         return clone $this->helpers[$name];

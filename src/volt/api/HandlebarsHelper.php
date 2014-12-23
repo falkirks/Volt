@@ -3,12 +3,13 @@ namespace volt\api;
 
 use pocketmine\plugin\PluginBase;
 use pocketmine\Server;
+use volt\exception\APIFeatureNotAvailableException;
 use volt\exception\PluginIdentificationException;
 use volt\exception\PluginNotEnabledException;
 use volt\ServerTask;
 use volt\Volt;
 
-class DynamicPage{
+class HandlebarsHelper{
     private $name;
     private $plugin;
     public function __construct($name, $plugin = false){
@@ -20,7 +21,6 @@ class DynamicPage{
 
             }
         }
-
         if($name instanceof PluginBase) {
             $this->plugin = $name->getName();
         }
@@ -30,12 +30,15 @@ class DynamicPage{
             }
         }
         if($this->plugin == null) throw new PluginIdentificationException;
+        $reflection = new \ReflectionClass(Server::getInstance()->getPluginManager()->getPlugin($this->plugin));
+        if(stripos($reflection->getDocComment(), "@volt-api dev") === false) throw new APIFeatureNotAvailableException;
+
         $this->getVolt()->getMonitoredDataStore()->createPlugin($this->plugin);
 
         $this->name = $name;
     }
-    public function __invoke($content){
-        $this->setContent($content);
+    public function __invoke(callable $helper){
+        $this->setHelper($helper);
     }
     /**
      * @return mixed
@@ -43,24 +46,23 @@ class DynamicPage{
     public function getName(){
         return $this->name;
     }
-    public function getContent(){
+    public function getHelper(){
         $volt = $this->getVolt();
         if($volt !== null){
             return $volt->getVoltServer()->synchronized(function(ServerTask $thread, $name){
-                return $thread->getTemplate($name);
+                return $thread->getHelper($name);
             }, $volt->getVoltServer(), $this->name);
         }
         else{
             throw new PluginNotEnabledException;
         }
     }
-    public function setContent($content){
+    public function setHelper(callable $helper){
         $volt = $this->getVolt();
         if($volt !== null){
-            $out = $volt->getVoltServer()->synchronized(function(ServerTask $thread, $name, $content){
-                return $thread->addTemplate($name, $content);
-            }, $volt->getVoltServer(), $this->name, $content);
-            if(!$out) throw new PageAlreadyExistsException;
+            $out = $volt->getVoltServer()->synchronized(function(ServerTask $thread, $name, $helper){
+                return $thread->addHelper($name, $helper);
+            }, $volt->getVoltServer(), $this->name, $helper);
         }
         else{
             throw new PluginNotEnabledException;
