@@ -13,6 +13,7 @@ xmlhttp.onreadystatechange = function() {
         if(xmlhttp.status == 200){
             document.getElementById('content').innerHTML =
                 marked(xmlhttp.responseText);
+            hljs.initHighlightingOnLoad();
         }
         else {
             alert('something else other than 200 was returned')
