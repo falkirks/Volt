@@ -7,13 +7,17 @@ if (window.XMLHttpRequest) {
     // code for IE6, IE5
     xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
 }
-
+marked.setOptions({
+    highlight: function (code) {
+        return hljs.highlightAuto(code).value;
+    }
+});
 xmlhttp.onreadystatechange = function() {
     if (xmlhttp.readyState == 4 ) {
         if(xmlhttp.status == 200){
             document.getElementById('content').innerHTML =
                 marked(xmlhttp.responseText);
-            hljs.initHighlightingOnLoad();
+            //hljs.initHighlightingOnLoad();
         }
         else {
             alert('something else other than 200 was returned')
