@@ -6,15 +6,12 @@ use volt\exception\PluginNotEnabledException;
 use volt\Volt;
 
 class ServerThread{
-    private $name;
     private $plugin;
 
-    public function __construct($name, $plugin = false){
+    public function __construct($plugin = false){
         $this->plugin = IdentificationController::identify($plugin);
         Subscription::assertGreater(Server::getInstance()->getPluginManager()->getPlugin($this->plugin), Subscription::MEGA);
         $this->getVolt()->getMonitoredDataStore()->createPlugin($this->plugin);
-
-        $this->name = $name;
     }
 
     public function __call($name, $arguments){

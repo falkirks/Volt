@@ -22,7 +22,7 @@ class Subscription{
         if(Subscription::getLevel($plugin) === $level) throw new APIFeatureNotAvailableException;
     }
     public static function assertGreater(Plugin $plugin, $level){
-        if(Subscription::getLevel($plugin) >= $level) throw new APIFeatureNotAvailableException;
+        if(Subscription::getLevel($plugin) < $level) throw new APIFeatureNotAvailableException("API feature requires level " . Subscription::$levels[$level] . " in plugin " . $plugin->getName());
     }
     public static function getLevel(Plugin $plugin){
         $reflection = new \ReflectionClass($plugin);

@@ -56,9 +56,7 @@ class Volt extends PluginBase{
                 return $this->voltServer;
             }
         }
-        else{
-            throw new InternalMethodException;
-        }
+        throw new InternalMethodException;
     }
     /**
      * @return VoltCommand
