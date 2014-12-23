@@ -2,7 +2,7 @@
 ====
 ###### Formerly HTTPServer
 
-Volt is an hyper-powerful integrated website solution for PocketMine. Driven by Handlebars and pthreads, volt is an extensive webserver.
+Volt is an hyper-powerful integrated website solution for PocketMine. Driven by Handlebars and pthreads, volt is an extensive webserver. Volt's dependencies are managed using Miner.
 
 ### What's changing in v3.0.0?
 * **Name.** HTTPServer is now volt. Why? I thought carefully about this one and I figured that "HTTPServer" did not represent the project correctly.
