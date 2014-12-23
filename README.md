@@ -28,6 +28,7 @@ You can specify an API level to consume in the base class of your plugin using a
      * @package volt
      * @volt-api peta
      */
+     class Volt extends PluginBase{
 ```
 **Note** If you want to save space you can remove the first two lines of the comment.
 
