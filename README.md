@@ -42,7 +42,7 @@ In an optimal setting you should identify yourself to Volt. This will allow Volt
 * Plugin name
 * Auto-detect (Not recommended)
 
-###### `WebsiteData`
+###### `MonitoredWebsiteData`
 ```php
 /* Option #1 (Recommended) */
 $data = new \volt\api\MonitoredWebsiteData($this); //Called from within a PluginBase
