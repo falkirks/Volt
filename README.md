@@ -22,7 +22,7 @@ Volt's API will offer features which can cause harm to the PocketMine instance. 
 * `mega` - `ServerThread`
 * `peta` - Not currently used
 
-You can specify an API level to consume in the base class of your plugin using a doc comment on the class. The following comment is used on the Volt main class
+You can specify an API level to consume in the base class of your plugin using a doc comment on the class. You will have access to all lower levels as well. The following comment is used on the Volt main class
 ```php
     /**
      * Class Volt
