@@ -11,10 +11,11 @@ Volt is an hyper-powerful integrated website solution for PocketMine. Driven by 
 * **API.** The API has been entirely rewritten to be more fun to use. It is much more logical and powerful.
 
 ### Volt API
-The API is still tentative and might undergo some large structural changes before its release, so don't get too attached to it. The API centralizes on `WebsiteData` objects which are magical objects that allow interaction with the server. These objects mimic arrays by implementing `\ArrayAccess`, `\Countable`, and `\IteratorAggregate`. The API also exposes `DynamicPage` for registering pages and `HandlebarsHelper` for injecting code into handlebars.
+The API is still tentative and might undergo some large structural changes before its release, so don't get too attached to it. The API centralizes on `WebsiteData` objects which are magical objects that allow interaction with the server. These objects mimic arrays by implementing `\ArrayAccess`, `\Countable`, and `\IteratorAggregate`. The API also exposes `DynamicPage` for registering pages, `ServerThread` for direct interaction with the server and `HandlebarsHelper` for injecting code into handlebars.
 
-#### API subscription levels
-Volt's API will offer features which can cause more harm to PocketMine. For example, using a `HandlebarsHelper` can easily cause a segfault or a memory leak if not used correctly. In order to combat this, Volt provides an API subscription system. There are four subscription levels. 
+#### API Security 
+##### API subscription levels
+Volt's API will offer features which can cause harm to the PocketMine instance. For example, using a `HandlebarsHelper` can easily cause a segfault or a memory leak if not used correctly. In order to combat this, Volt provides an API subscription system. There are five subscription levels. 
 * `micro` (Default) - `DynamicPage` and `WebsiteData`
 * `deci`- Not currently used
 * `kilo` - `HandlebarsHelper`
@@ -32,14 +33,11 @@ You can specify an API level to consume in the base class of your plugin using a
 ```
 **Note** If you want to save space you can remove the first two lines of the comment.
 
-#### Getting API access
-##### Anonymous
-This mode of access is **not** recommended . It allows direct access to the API without any logging or monitoring.
-```php
-$data = new \volt\api\WebsiteData();
-```
-##### Identified 
-In an optimal setting you should identify yourself to Volt. This will allow Volt to create logs of your API usage. Identification is required for `DynamicPage` and `HandlebarsHelper`. There are three options for identification
+##### Internal method protection
+Some methods are protected by Volt for API security. If you attempt to access one of these you will get thrown an `InternalMethodException`.
+
+##### API Identification
+In an optimal setting you should identify yourself to Volt. This will allow Volt to create logs of your API usage. Identification is recommended for all interactions and is required for all interactions except `WebsiteData`. There are three options for identification
 * PluginBase (Recommended)
 * Plugin name
 * Auto-detect (Not recommended)
