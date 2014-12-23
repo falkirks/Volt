@@ -21,7 +21,7 @@ Volt's API will offer features which can cause more harm to PocketMine. For exam
 * `mega` - Direct access to `ServerTask` (not enforced yet)
 * `peta` - Not currently used
 
-You can specify an API in the base class of your plugin using a doc comment on the class. The following comment is used on the Volt main class
+You can specify an API level to consume in the base class of your plugin using a doc comment on the class. The following comment is used on the Volt main class
 ```php
     /**
      * Class Volt
