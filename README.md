@@ -63,12 +63,15 @@ $data = new \volt\api\DynamicPage("/page"); //Called from within a PluginBase, a
 
 If an identification request fails a `volt\exception\PluginIdentificationException` will be thrown.
 
-#### Setting and getting values with `WebsiteData`
+#### Setting and getting values with `WebsiteData` or `MonitoredWebsiteData`
 Once you have a `WebsiteData` object, you get a link to the global scope of handlebars variables. It is highly recommended to put all your variables in a namespace for your plugin, this helps avoid collisions.
 ```php
 $data = new \volt\WebsiteData(); //We are using anon
-$data["foo"] = ["1", "2", "3"];
-var_dump($data["foo"]); //["1", "2", "3"]
+$data["foo"] = ["1", "2", "3"]; // not logged
+var_dump($data["foo"]); // not logged
+$data = new \volt\MonitoredWebsiteData($this); // We are using identified, $this is a \pocketmine\plugin\Plugin
+$data["bar"] = ["1", "2", "3"]; // logged
+var_dump($data["bar"]); // logged
 ```
 
 #### Dynamic Page Registration with `DynamicPage`
