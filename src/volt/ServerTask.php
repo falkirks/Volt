@@ -25,23 +25,20 @@ class ServerTask extends Thread{
         $this->bannedUsers = $bannedips;
         $this->helpers = [];
         $this->loader = clone $loader;
-        if (($this->sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP)) === false) {
-            print "socket_create() failed: reason: " . socket_strerror(socket_last_error()) . "\n";
+        try {
+            $this->sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+            //socket_set_option ($this->sock, SOL_SOCKET, SO_REUSEADDR, 1);
+            socket_bind($this->sock, "0.0.0.0", $this->config->get("server-port"));
+            socket_listen($this->sock, 5);
+            socket_set_nonblock($this->sock);
+
+            $this->getLogger()->info("[SUCCESS] Server Status: " . TextFormat::GREEN . "Active" . TextFormat::WHITE . " on port " . volt::$serverConfig->get("server-port") . "\n");
+            $this->start();
+        }
+        catch(\RuntimeException $e){
+            $this->getLogger()->critical("The server encountered an error while initialising itself. Maybe you have an instance already running?");
             $this->stop();
         }
-        if(socket_set_option ($this->sock, SOL_SOCKET, SO_REUSEADDR, 1) === false){
-            $this->stop();
-        }
-        if (socket_bind($this->sock, "0.0.0.0", $this->config->get("server-port")) === false) {
-            print "socket_bind() failed: reason: " . socket_strerror(socket_last_error($this->sock)) . "\n";
-            $this->stop();
-        }
-        if (socket_listen($this->sock, 5) === false) {
-            print "socket_listen() failed: reason: " . socket_strerror(socket_last_error($this->sock)) . "\n";
-            $this->stop();
-        }
-        $this->getLogger()->info("[SUCCESS] Server Status: " . TextFormat::GREEN . "Active" . TextFormat::WHITE . " on port " . volt::$serverConfig->get("server-port") . "\n");
-        $this->start();
     }
     public function stop() {
         $this->getLogger()->info("Server Status: " . TextFormat::RED . "Stopped\n");
@@ -50,8 +47,8 @@ class ServerTask extends Thread{
     public function run() {
         $this->loader->register(true);
         while($this->stop === false) {
-            if (($msgsock = socket_accept($this->sock)) === false) {
-                break;
+            if (($msgsock = @socket_accept($this->sock)) === false) {
+                continue;
             }
             socket_getpeername($msgsock, $address);
             if(!in_array($address, $this->bannedUsers)){

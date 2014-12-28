@@ -32,7 +32,7 @@ class Volt extends PluginBase{
         foreach($this->getServer()->getIPBans()->getEntries() as $ban){
             $names[] = $ban->getName();
         }
-        $this->voltServer = new ServerTask($this->getServer()->getDataPath() . "volt", $this->getServer()->getLoader(), $this->getServer()->getLogger(), $this->getConfig(), $names);
+        $this->voltServer = new ServerTask($this->getServer()->getDataPath() . "volt", $this->getServer()->getLoader(), $this->getLogger(), $this->getConfig(), $names);
         $this->monitoredDataStore = new MonitoredDataStore();
 
         $this->voltCommand = new VoltCommand($this);
@@ -76,6 +76,7 @@ class Volt extends PluginBase{
         $this->voltServer->synchronized(function(ServerTask $thread){
             $thread->stop();
         }, $this->voltServer);
+        $this->voltServer->join();
     }
     public function onDisable(){
         if($this->voltServer instanceof ServerTask){
