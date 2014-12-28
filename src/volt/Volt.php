@@ -26,7 +26,7 @@ class Volt extends PluginBase{
     public function onEnable(){
         $this->saveDefaultConfig();
         self::$serverConfig = $this->getConfig();
-        $this->getLogger()->warning("Volt 3.0 preview is mystical, magical and " . TextFormat::RED . "buggy" . TextFormat::YELLOW . ".");
+
         if(!is_dir($this->getServer()->getDataPath() . "volt")) mkdir($this->getServer()->getDataPath() . "volt");
         $names = [];
         foreach($this->getServer()->getIPBans()->getEntries() as $ban){

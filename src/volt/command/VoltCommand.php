@@ -4,6 +4,7 @@ namespace volt\command;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\command\PluginIdentifiableCommand;
+use volt\api\Subscription;
 use volt\Volt;
 
 class VoltCommand extends Command implements PluginIdentifiableCommand{
@@ -28,12 +29,20 @@ class VoltCommand extends Command implements PluginIdentifiableCommand{
                                         }
                                         else {
                                             foreach ($this->getPlugin()->getMonitoredDataStore()->getIterator() as $name => $plugin) {
-                                                $sender->sendMessage($name);
+                                                $sender->sendMessage("- $name");
                                             }
                                         }
                                         break;
                                     case "block":
-                                        $sender->sendMessage("Blocking will be ready in the next major release.");
+                                        $sender->sendMessage("API blocking will be ready in the next major release.");
+                                        break;
+                                    case 'getsub':
+                                        foreach($this->getPlugin()->getServer()->getPluginManager()->getPlugins() as $plugin){
+                                            $sender->sendMessage("- " . $plugin->getName() . " => " . Subscription::switchLevelFormat(Subscription::getLevel($plugin)));
+                                        }
+                                        break;
+                                    default:
+                                        $sender->sendMessage("The API feature {$args[1]} doesn't exist.");
                                         break;
                                 }
                             }

@@ -28,7 +28,16 @@ class Subscription{
         $reflection = new \ReflectionClass($plugin);
         preg_match_all("`@volt-api (.*)`", $reflection->getDocComment(), $matches);
         if(isset($matches[1][0])){
-            $level = array_search(strtolower($matches[1][0]), Subscription::$levels);
+            return Subscription::switchLevelFormat($matches[1][0]);
+        }
+        return Subscription::MICRO;
+    }
+    public static function switchLevelFormat($level){
+        if(is_int($level)){
+            return Subscription::$levels[$level];
+        }
+        else{
+            $level = array_search(strtolower($level), Subscription::$levels);
             if($level !== false){
                 return $level;
             }
@@ -36,6 +45,5 @@ class Subscription{
                 return Subscription::MICRO;
             }
         }
-        return Subscription::MICRO;
     }
 }
