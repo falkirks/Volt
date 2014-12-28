@@ -10,6 +10,11 @@ Volt is an hyper-powerful integrated website solution for PocketMine. Driven by 
 * **Templating.** Now Volt is driven by Handlebars for high speeds and extreme customization.
 * **API.** The API has been entirely rewritten to be more fun to use. It is much more logical and powerful.
 
+### The /volt command
+The /volt command allows interaction with the API and the server itself. It doesn't have many features right now, but I am always open to suggestions for new ones. 
+* `/volt api list` - Will list plugins that are using the API
+* `/volt api getsub` - Will list what subscription every plugin on the server holds in the Volt API
+
 ### Volt API
 The API is still tentative and might undergo some large structural changes before its release, so don't get too attached to it. The API centralizes on `WebsiteData` objects which are magical objects that allow interaction with the server. These objects mimic arrays by implementing `\ArrayAccess`, `\Countable`, and `\IteratorAggregate`. The API also exposes `DynamicPage` for registering pages, `ServerThread` for direct interaction with the server and `HandlebarsHelper` for injecting code into handlebars.
 
