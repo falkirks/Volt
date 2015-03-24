@@ -24,7 +24,7 @@ class ServerTask extends Thread{
         $this->config = $config;
         $this->bannedUsers = $bannedips;
         $this->helpers = [];
-        $this->loader = clone $loader;
+        $this->loader = unserialize(serialize($loader));
         try {
             $this->sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
             //socket_set_option ($this->sock, SOL_SOCKET, SO_REUSEADDR, 1);
@@ -60,7 +60,7 @@ class ServerTask extends Thread{
             $client->close();
             return true;
         });
-        socket_shutdown($this->sock);
+        @socket_shutdown($this->sock);
         $arrOpt = array('l_onoff' => 1, 'l_linger' => 1);
         socket_set_block($this->sock);
         socket_set_option($this->sock, SOL_SOCKET, SO_LINGER, $arrOpt);

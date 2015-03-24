@@ -22,7 +22,7 @@ class ClientTask extends \Threaded{
     public function __construct($clientSocket, \ClassLoader $loader, \Logger $logger, $path, Config $config, $templates, $helpers, ServerTask $serverTask){
         $this->clientSocket = $clientSocket;
         $this->h = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n";
-        $this->loader = clone $loader;
+        $this->loader = unserialize(serialize($loader));
         $this->logger = $logger;
         $this->basePath = $path;
         $this->config = $config;
