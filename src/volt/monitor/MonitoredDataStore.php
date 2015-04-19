@@ -2,7 +2,6 @@
 namespace volt\monitor;
 
 
-use Traversable;
 
 class MonitoredDataStore{
     private $plugins;
@@ -11,11 +10,11 @@ class MonitoredDataStore{
     }
     public function addWrite($plugin, $name, $value){
         $this->createPlugin($plugin);
-        $this->plugins[$name]["writes"][] = ["name" => $name, "value" => $value, "time" => time()];
+        $this->plugins[$plugin]["writes"][] = ["name" => $name, "value" => $value, "time" => time()];
     }
     public function addRead($plugin, $name, $value){
-        $this->createPlugin($name);
-        $this->plugins[$name]["reads"][] = ["name" => $name, "value" => $value, "time" => time()];
+        $this->createPlugin($plugin);
+        $this->plugins[$plugin]["reads"][] = ["name" => $name, "value" => $value, "time" => time()];
     }
     public function createPlugin($name){
         if(!isset($this->plugins[$name])){

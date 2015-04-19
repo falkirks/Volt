@@ -8,7 +8,7 @@ use volt\exception\PluginNotEnabledException;
 use volt\ServerTask;
 use volt\Volt;
 
-class DynamicPage{
+class StaticPage{
     private $name;
     private $plugin;
     public function __construct($name, $plugin = false){
@@ -42,6 +42,7 @@ class DynamicPage{
                 return $thread->addTemplate($name, $content);
             }, $volt->getVoltServer(), $this->name, $content);
             if(!$out) throw new PageAlreadyExistsException;
+            $this->getVolt()->getMonitoredDataStore()->addWrite($this->plugin, $this->name, $content);
         }
         else{
             throw new PluginNotEnabledException;

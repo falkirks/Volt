@@ -4,7 +4,7 @@
 #  __ |/ / / /_/ /  / / /_
 #  _____/  \____//_/  \__/
 #
-server-port: 7000
+server-port: 5000
   # The port you want you server to run on
 pool-size: 4
   # Size to use for the client handler pool

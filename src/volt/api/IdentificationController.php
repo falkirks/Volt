@@ -25,7 +25,6 @@ class IdentificationController{
             }
         }
         if($plugin == null) throw new PluginIdentificationException;
-        $plugin = strtolower($plugin);
         IdentificationController::getVolt()->getMonitoredDataStore()->createPlugin($plugin);
         return $plugin;
     }

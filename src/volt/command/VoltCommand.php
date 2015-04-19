@@ -4,6 +4,7 @@ namespace volt\command;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\command\PluginIdentifiableCommand;
+use pocketmine\utils\TextFormat;
 use volt\api\Subscription;
 use volt\Volt;
 
@@ -39,6 +40,12 @@ class VoltCommand extends Command implements PluginIdentifiableCommand{
                                     case 'getsub':
                                         foreach($this->getPlugin()->getServer()->getPluginManager()->getPlugins() as $plugin){
                                             $sender->sendMessage("- " . $plugin->getName() . " => " . Subscription::switchLevelFormat(Subscription::getLevel($plugin)));
+                                        }
+                                        break;
+                                    case 'stats':
+                                        $sender->sendMessage("| " . TextFormat::BLUE . "Plugin" . TextFormat::RESET . " | Reads | Writes |");
+                                        foreach($this->getPlugin()->getMonitoredDataStore()->getIterator() as $name => $data){
+                                            $sender->sendMessage("| " . TextFormat::BLUE . $name . TextFormat::RESET . " | " . count($data["reads"]) . " | " . count($data["writes"]) . " |");
                                         }
                                         break;
                                     default:

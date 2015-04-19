@@ -4,6 +4,7 @@ namespace volt;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat;
+use volt\api\MonitoredWebsiteData;
 use volt\api\Subscription;
 use volt\command\VoltCommand;
 use volt\exception\InternalMethodException;
@@ -32,11 +33,15 @@ class Volt extends PluginBase{
         foreach($this->getServer()->getIPBans()->getEntries() as $ban){
             $names[] = $ban->getName();
         }
-        $this->voltServer = new ServerTask($this->getServer()->getDataPath() . "volt", $this->getServer()->getLoader(), $this->getLogger(), $this->getConfig(), $names);
+        $this->voltServer = new ServerTask($this->getServer()->getDataPath() . "volt", $this->getLogger(), $this->getConfig(), $names);
         $this->monitoredDataStore = new MonitoredDataStore();
 
         $this->voltCommand = new VoltCommand($this);
         $this->getServer()->getCommandMap()->register("volt", $this->voltCommand);
+
+        $store = new MonitoredWebsiteData($this);
+        $store["foo"] = "bar";
+        print $store["foo"];
     }
     public function addValue($n, $v){
         $this->getLogger()->warning(TextFormat::DARK_AQUA . 'addValue($n, $v)' . TextFormat::RESET . TextFormat::YELLOW . " is no longer supported.");
