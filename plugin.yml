@@ -16,6 +16,6 @@ permissions:
       default: true
       children:
         volt.command.api.list:
-          deafult: op
+          default: op
         volt.command.api.getsub:
-          deafult: op
+          default: op
