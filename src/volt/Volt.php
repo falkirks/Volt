@@ -38,10 +38,6 @@ class Volt extends PluginBase{
 
         $this->voltCommand = new VoltCommand($this);
         $this->getServer()->getCommandMap()->register("volt", $this->voltCommand);
-
-        $store = new MonitoredWebsiteData($this);
-        $store["foo"] = "bar";
-        print $store["foo"];
     }
     public function addValue($n, $v){
         $this->getLogger()->warning(TextFormat::DARK_AQUA . 'addValue($n, $v)' . TextFormat::RESET . TextFormat::YELLOW . " is no longer supported.");
