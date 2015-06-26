@@ -27,6 +27,6 @@ class TemplateLoader implements Loader{
         if (isset($templates[$name])) {
             return $templates[$name];
         }
-        else return $this->client->getFile($name);
+        else return file_get_contents($this->client->getBasePath() . $name);
     }
 }
