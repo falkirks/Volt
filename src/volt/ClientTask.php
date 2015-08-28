@@ -56,10 +56,10 @@ class ClientTask extends \Threaded{
         $query = parse_url("http://e.co" . $url , PHP_URL_QUERY);
         $path = $this->sanitizePath($url);
         $msg = "";
+        if(substr($path, strlen($path)-1, 1) === "/"){
+            $path = $this->getConfig()->get("special-pages")["index"];
+        }
         if(is_file($this->basePath . $path)){
-            if(substr($path, strlen($path)-1, 1) === "/"){
-                $path = $this->getConfig()->get("special-pages")["index"];
-            }
             $mime = (substr($this->basePath . $path, -4) === ".hbs" ? "text/html" : mime_content_type($this->basePath . $path));
             $msg = "HTTP/1.1 200 OK\r\nContent-Type: $mime \r\n\r\n";
 

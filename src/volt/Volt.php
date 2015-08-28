@@ -124,11 +124,20 @@ namespace volt {
             $this->voltCommand = new VoltCommand($this);
             $this->getServer()->getCommandMap()->register("volt", $this->voltCommand);
         }
-
+        /**
+         * @param $n
+         * @param $v
+         * @deprecated
+         */
         public function addValue($n, $v){
             $this->getLogger()->warning(TextFormat::DARK_AQUA . 'addValue($n, $v)' . TextFormat::RESET . TextFormat::YELLOW . " is no longer supported.");
         }
 
+        /**
+         * @param $n
+         * @param callable $func
+         * @deprecated
+         */
         public function bindTo($n, Callable $func){
             $this->getLogger()->warning(TextFormat::DARK_AQUA . 'bindTo($n, Callable $func)' . TextFormat::RESET . TextFormat::YELLOW . " is no longer supported.");
         }

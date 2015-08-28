@@ -31,7 +31,7 @@ class ServerTask extends Thread{
             socket_listen($this->sock, 5);
             socket_set_nonblock($this->sock);
 
-            $this->getLogger()->info("[SUCCESS] Server Status: " . TextFormat::GREEN . "Active" . TextFormat::WHITE . " on port " . volt::$serverConfig->get("server-port") . "\n");
+            $this->getLogger()->info("HTTP server " . TextFormat::GREEN . "active" . TextFormat::WHITE . " on port " . volt::$serverConfig->get("server-port"));
             $this->start();
         }
         catch(\RuntimeException $e){
@@ -40,7 +40,7 @@ class ServerTask extends Thread{
         }
     }
     public function stop() {
-        $this->getLogger()->info("Server Status: " . TextFormat::RED . "Stopped\n");
+        $this->getLogger()->info("HTTP server " . TextFormat::RED . "stopped");
         $this->stop = true;
     }
     public function run() {
