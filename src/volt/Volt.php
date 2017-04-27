@@ -123,6 +123,10 @@ namespace volt {
 
             $this->voltCommand = new VoltCommand($this);
             $this->getServer()->getCommandMap()->register("volt", $this->voltCommand);
+
+            if(getenv("USE_ZEND_ALLOC") !== "0"){
+                $this->getServer()->getLogger()->critical("Volt is a fragile plugin and uses unsupported functionality in PHP threads. This means it will encounter random issues and instability. To improve this you must run " . TextFormat::BLUE . "\" export USE_ZEND_ALLOC=0 \"" . TextFormat::RESET . " before running PocketMine.");
+            }
         }
         /**
          * @param $n
