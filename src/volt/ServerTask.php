@@ -10,11 +10,11 @@ class ServerTask extends Thread{
     private $logger;
     private $config;
     private $valueStore;
-    private $bannedUsers;
+    private $templates;
     /** @var  callable[] */
     private $helpers;
     public $stop, $path;
-    public function __construct($path, \Logger $logger, Config $config, array $bannedips) {
+    public function __construct($path, \Logger $logger, Config $config) {
         $this->stop = false;
         $this->pool = new \Pool($config->get('pool-size'), \Worker::CLASS);
         $this->valueStore = serialize([]);
@@ -22,7 +22,6 @@ class ServerTask extends Thread{
         $this->logger = $logger;
         $this->path = $path;
         $this->config = $config;
-        $this->bannedUsers = $bannedips;
         $this->helpers = [];
         try {
             $this->sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
@@ -50,10 +49,8 @@ class ServerTask extends Thread{
                 continue;
             }
             socket_getpeername($msgsock, $address);
-            if(!in_array($address, $this->bannedUsers)){
-                $client = new ClientTask($msgsock, $this->getClassLoader(), $this->getLogger(), $this->path, $this->config, $this->templates, $this->helpers, $this);
-                $this->pool->submit($client);
-            }
+            $client = new ClientTask($msgsock, $this->getClassLoader(), $this->getLogger(), $this->path, $this->config, $this->templates, $this->helpers, $this);
+            $this->pool->submit($client);
         }
         $this->pool->collect(function(ClientTask $client){
             $client->close();

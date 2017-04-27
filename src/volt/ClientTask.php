@@ -97,7 +97,6 @@ class ClientTask extends \Threaded{
             }
         }
         //elseif (substr($page, -4) == "html") socket_write($con, $this->h . $this->replace(file_get_contents($this->path . $page)));
-
         socket_write($this->clientSocket, $msg);
         $this->close();
     }
@@ -137,7 +136,6 @@ class ClientTask extends \Threaded{
     public function close(){
         @socket_shutdown($this->clientSocket);
         socket_close($this->clientSocket);
-
         $this->clientSocket = false;
     }
 }
