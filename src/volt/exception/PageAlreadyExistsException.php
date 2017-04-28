@@ -1,5 +1,5 @@
 <?php
-namespace volt\api;
+namespace volt\exception;
 /**
  * Class PageAlreadyExistsException
  * This exception is thrown when a DynamicPage name collides with
