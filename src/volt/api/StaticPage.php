@@ -3,6 +3,7 @@ namespace volt\api;
 
 use pocketmine\plugin\PluginBase;
 use pocketmine\Server;
+use volt\exception\PageAlreadyExistsException;
 use volt\exception\PluginIdentificationException;
 use volt\exception\PluginNotEnabledException;
 use volt\ServerTask;
@@ -41,7 +42,7 @@ class StaticPage{
             $out = $volt->getVoltServer()->synchronized(function(ServerTask $thread, $name, $content){
                 return $thread->addTemplate($name, $content);
             }, $volt->getVoltServer(), $this->name, $content);
-            if(!$out) throw new PageAlreadyExistsException;
+            if(!$out) throw new PageAlreadyExistsException();
             $this->getVolt()->getMonitoredDataStore()->addWrite($this->plugin, $this->name, $content);
         }
         else{

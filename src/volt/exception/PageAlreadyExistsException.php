@@ -9,7 +9,7 @@ namespace volt\exception;
  * This will NOT be thrown when overwriting in memory pages as
  * it is hard to assess different calling contexts' right
  * to the page name.
- * @package volt\api
+ * @package volt\exception
  */
 class PageAlreadyExistsException extends \Exception{
 
